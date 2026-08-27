@@ -1,0 +1,89 @@
+name: Materialize Zhixing AI Source
+
+on:
+  push:
+    branches: [feat/team-custom-assistant]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: zhixing-ai-source-materialize
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout bootstrap commit
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+
+      - name: Verify and apply committed source snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive_gz="$GITHUB_WORKSPACE/.zhixing-bootstrap/source-overlay.zip.gz"
+          temp_dir="$RUNNER_TEMP/zhixing-source-overlay"
+          archive_zip="$temp_dir/source-overlay.zip"
+          mkdir -p "$temp_dir"
+
+          echo "f01d7cb2076c931fec750511846e693d359f658d46a5fd3086c213e8bc731bf0  $archive_gz" \
+            | sha256sum --check
+          gzip --decompress --stdout "$archive_gz" > "$archive_zip"
+          echo "3f125b566e2d38b63aa1818312a85c5ae0648a0f245cea35ec28757b63c181a6  $archive_zip" \
+            | sha256sum --check
+          unzip -q "$archive_zip" -d "$temp_dir/unpacked"
+
+          overlay_root="$temp_dir/unpacked/zhixing-ai-source-overlay-0.1.0-internal.1"
+          test -d "$overlay_root/files"
+          grep -Fxq 'SOURCE_MODE=head' "$overlay_root/SOURCE.txt"
+          grep -Fxq 'BASE_COMMIT=071ad2f65c4486fe475e34a56a34a084b1fc99b8' "$overlay_root/SOURCE.txt"
+          grep -Fxq 'HEAD_COMMIT=667fd6e86b2e7b77fb84afe86e89b98ff4124cdd' "$overlay_root/SOURCE.txt"
+          (
+            cd "$overlay_root/files"
+            sha256sum --check ../FILES.sha256
+          )
+
+          cp -a "$overlay_root/files/." "$GITHUB_WORKSPACE/"
+          while IFS= read -r relative_path || [[ -n "$relative_path" ]]; do
+            [[ -z "$relative_path" ]] && continue
+            case "$relative_path" in
+              /*|..|../*|*/..|*/../*|*$'\n'*)
+                echo "Unsafe deletion path: $relative_path" >&2
+                exit 1
+                ;;
+            esac
+            target="$GITHUB_WORKSPACE/$relative_path"
+            if [[ -e "$target" || -L "$target" ]]; then
+              rm -f -- "$target"
+            fi
+          done < "$overlay_root/DELETE_FILES.txt"
+
+          rm -f -- "$GITHUB_WORKSPACE/.github/workflows/zhixing-bootstrap.yml"
+          rm -f -- "$archive_gz"
+          rmdir -- "$GITHUB_WORKSPACE/.zhixing-bootstrap"
+
+          cd "$GITHUB_WORKSPACE"
+          git add -A
+          materialized_tree="$(git write-tree)"
+          test "$materialized_tree" = '8651e8fd9361b336b628c0958f1bc6d01e24ce87'
+          if git diff --cached --name-only | grep -q '^\.zhixing-bootstrap/\|^\.github/workflows/zhixing-bootstrap\.yml$'; then
+            echo 'Bootstrap files remain staged.' >&2
+            exit 1
+          fi
+
+          git config user.name 'Zhixing AI Build Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git commit -m 'feat: add Zhixing AI internal team build'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+          materialized_sha="$(git rev-parse HEAD)"
+          {
+            echo '## Zhixing AI source materialized'
+            echo
+            echo "- Commit: \`$materialized_sha\`"
+            echo "- Tree: \`$materialized_tree\`"
+            echo '- Bootstrap files removed: yes'
+          } >> "$GITHUB_STEP_SUMMARY"
