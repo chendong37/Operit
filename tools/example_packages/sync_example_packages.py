@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -14,10 +15,11 @@ from pathlib import Path, PurePosixPath
 MANIFEST_FILENAMES = ("manifest.hjson", "manifest.json")
 SYNCABLE_SUFFIXES = {".js", ".toolpkg"}
 SYNC_MODES = ("normal", "test")
-DEBUG_APP_PACKAGE = "com.ai.assistance.operit.debug"
-RELEASE_APP_PACKAGE = "com.ai.assistance.operit"
-SUPPORTED_APP_PACKAGES = (DEBUG_APP_PACKAGE, RELEASE_APP_PACKAGE)
+DEFAULT_APP_PACKAGE = "com.zhixing.ai"
 APP_PACKAGE_ENV = "OPERIT_APP_PACKAGE"
+APP_PACKAGE_PATTERN = re.compile(
+    r"^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)+$"
+)
 HOT_RELOAD_STATE_FILE = ".sync_example_packages_hot_reload_state.json"
 LOCAL_SYNC_STATE_FILE = ".sync_example_packages_local_state.json"
 
@@ -602,32 +604,18 @@ def _is_app_package_installed(device_serial: str, app_package: str) -> bool:
 
 
 def _resolve_app_package(device_serial: str, requested_package: str | None) -> str:
-    # Hot reload must use the same applicationId as the installed APK, otherwise both the
-    # external package directory and the refresh/install broadcasts point at the wrong app.
-    configured_package = (requested_package or os.environ.get(APP_PACKAGE_ENV, "")).strip()
-    if configured_package:
-        if configured_package not in SUPPORTED_APP_PACKAGES:
-            supported = ", ".join(SUPPORTED_APP_PACKAGES)
-            raise ValueError(
-                f"Unsupported application package: {configured_package}. "
-                f"Expected one of: {supported}"
-            )
-        if not _is_app_package_installed(device_serial, configured_package):
-            raise ValueError(
-                f"Application package is not installed on {device_serial}: {configured_package}"
-            )
-        print(f"Using Operit application package: {configured_package}")
-        return configured_package
-
-    for app_package in SUPPORTED_APP_PACKAGES:
-        if _is_app_package_installed(device_serial, app_package):
-            print(f"Using Operit application package: {app_package}")
-            return app_package
-
-    supported = ", ".join(SUPPORTED_APP_PACKAGES)
-    raise ValueError(
-        f"Neither supported Operit application package is installed on {device_serial}: {supported}"
-    )
+    # Hot reload must use the installed APK's applicationId for directories and actions.
+    configured_package = (
+        requested_package or os.environ.get(APP_PACKAGE_ENV, "")
+    ).strip() or DEFAULT_APP_PACKAGE
+    if APP_PACKAGE_PATTERN.fullmatch(configured_package) is None:
+        raise ValueError(f"Invalid Android applicationId: {configured_package}")
+    if not _is_app_package_installed(device_serial, configured_package):
+        raise ValueError(
+            f"Application package is not installed on {device_serial}: {configured_package}"
+        )
+    print(f"Using application package: {configured_package}")
+    return configured_package
 
 
 def _parse_toolpkg_manifest_text(text: str, manifest_path: Path) -> str:
@@ -707,7 +695,7 @@ def _save_hot_reload_state(path: Path, state: dict[str, dict[str, str]]) -> None
 def _broadcast_refresh_packages(device_serial: str, app_package: str) -> None:
     action_debug_refresh_packages = f"{app_package}.DEBUG_REFRESH_PACKAGES"
     receiver_component_refresh = (
-        f"{app_package}/.core.tools.packTool.PackageDebugRefreshReceiver"
+        f"{app_package}/com.ai.assistance.operit.core.tools.packTool.PackageDebugRefreshReceiver"
     )
     _adb_command(
         device_serial,
@@ -735,7 +723,7 @@ def _broadcast_debug_install_toolpkg(
 ) -> None:
     action_debug_install_toolpkg = f"{app_package}.DEBUG_INSTALL_TOOLPKG"
     receiver_component_toolpkg = (
-        f"{app_package}/.core.tools.packTool.ToolPkgDebugInstallReceiver"
+        f"{app_package}/com.ai.assistance.operit.core.tools.packTool.ToolPkgDebugInstallReceiver"
     )
     _adb_command(
         device_serial,
@@ -930,9 +918,8 @@ def main() -> int:
         dest="app_package",
         default=None,
         help=(
-            "Operit applicationId for post-sync hot reload. Supports "
-            "com.ai.assistance.operit.debug and com.ai.assistance.operit; defaults to "
-            "OPERIT_APP_PACKAGE or automatic Debug-first detection."
+            "applicationId for post-sync hot reload. Defaults to OPERIT_APP_PACKAGE or "
+            f"{DEFAULT_APP_PACKAGE}."
         ),
     )
     parser.add_argument(

@@ -3,6 +3,7 @@ package com.ai.assistance.operit.integrations.intent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.ai.assistance.operit.integrations.auth.ExternalIntegrationAuthenticator
 import com.ai.assistance.operit.integrations.externalchat.ExternalChatRequest
 import com.ai.assistance.operit.integrations.externalchat.ExternalChatRequestExecutor
 import com.ai.assistance.operit.integrations.externalchat.ExternalChatResult
@@ -16,8 +17,10 @@ class ExternalChatReceiver : BroadcastReceiver() {
     companion object {
         private const val TAG = "ExternalChatReceiver"
 
-        const val ACTION_EXTERNAL_CHAT = "com.ai.assistance.operit.EXTERNAL_CHAT"
-        const val ACTION_EXTERNAL_CHAT_RESULT = "com.ai.assistance.operit.EXTERNAL_CHAT_RESULT"
+        val ACTION_EXTERNAL_CHAT =
+            com.ai.assistance.operit.core.application.AppIntentActions.externalChat
+        val ACTION_EXTERNAL_CHAT_RESULT =
+            com.ai.assistance.operit.core.application.AppIntentActions.externalChatResult
 
         const val EXTRA_REQUEST_ID = "request_id"
         const val EXTRA_MESSAGE = "message"
@@ -35,6 +38,7 @@ class ExternalChatReceiver : BroadcastReceiver() {
 
         const val EXTRA_REPLY_ACTION = "reply_action"
         const val EXTRA_REPLY_PACKAGE = "reply_package"
+        const val EXTRA_AUTH_TOKEN = ExternalIntegrationAuthenticator.EXTRA_AUTH_TOKEN
 
         const val EXTRA_RESULT_SUCCESS = "success"
         const val EXTRA_RESULT_CHAT_ID = "chat_id"
@@ -48,6 +52,20 @@ class ExternalChatReceiver : BroadcastReceiver() {
         val pending = goAsync()
         CoroutineScope(Dispatchers.IO).launch {
             try {
+                if (!ExternalIntegrationAuthenticator.isAuthorized(context, intent)) {
+                    sendResultBroadcast(
+                        context = context,
+                        action = intent.getStringExtra(EXTRA_REPLY_ACTION)?.takeIf { it.isNotBlank() }
+                            ?: ACTION_EXTERNAL_CHAT_RESULT,
+                        packageName = intent.getStringExtra(EXTRA_REPLY_PACKAGE)?.takeIf { it.isNotBlank() },
+                        result = ExternalChatResult(
+                            requestId = intent.getStringExtra(EXTRA_REQUEST_ID),
+                            success = false,
+                            error = "Unauthorized: missing or invalid auth_token",
+                        ),
+                    )
+                    return@launch
+                }
                 val replyAction = intent.getStringExtra(EXTRA_REPLY_ACTION)?.takeIf { it.isNotBlank() }
                     ?: ACTION_EXTERNAL_CHAT_RESULT
                 val replyPackage = intent.getStringExtra(EXTRA_REPLY_PACKAGE)?.takeIf { it.isNotBlank() }
@@ -102,9 +120,9 @@ class ExternalChatReceiver : BroadcastReceiver() {
         result: ExternalChatResult
     ) {
         val out = Intent(action)
-        if (!packageName.isNullOrBlank()) {
-            out.`package` = packageName
-        }
+        // Never emit an implicit result containing assistant output. Callers that need the
+        // result must identify their package explicitly; otherwise the result stays in-app.
+        out.`package` = packageName?.takeIf { it.isNotBlank() } ?: context.packageName
         if (!result.requestId.isNullOrBlank()) {
             out.putExtra(EXTRA_REQUEST_ID, result.requestId)
         }

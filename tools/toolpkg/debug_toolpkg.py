@@ -15,10 +15,11 @@ import zipfile
 from dataclasses import dataclass
 from pathlib import Path
 
-DEBUG_APP_PACKAGE = "com.ai.assistance.operit.debug"
-RELEASE_APP_PACKAGE = "com.ai.assistance.operit"
-SUPPORTED_APP_PACKAGES = (DEBUG_APP_PACKAGE, RELEASE_APP_PACKAGE)
+DEFAULT_APP_PACKAGE = "com.zhixing.ai"
 APP_PACKAGE_ENV = "OPERIT_APP_PACKAGE"
+APP_PACKAGE_PATTERN = re.compile(
+    r"^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)+$"
+)
 MANIFEST_FILENAMES = ("manifest.json", "manifest.hjson")
 DEFAULT_LOG_WAIT_SECONDS = 6
 LOGCAT_TAGS = (
@@ -269,32 +270,18 @@ def resolve_app_package(
     device_serial: str,
     requested_package: str | None,
 ) -> str:
-    # Debug and Release APKs expose the same receivers under different applicationIds;
-    # resolving before pushing prevents an archive or broadcast from reaching the other APK.
-    configured_package = (requested_package or os.environ.get(APP_PACKAGE_ENV, "")).strip()
-    if configured_package:
-        if configured_package not in SUPPORTED_APP_PACKAGES:
-            supported = ", ".join(SUPPORTED_APP_PACKAGES)
-            raise ToolPkgDebugError(
-                f"Unsupported application package: {configured_package}. "
-                f"Expected one of: {supported}"
-            )
-        if not _is_app_package_installed(device_serial, configured_package):
-            raise ToolPkgDebugError(
-                f"Application package is not installed on {device_serial}: {configured_package}"
-            )
-        print(f"Using Operit application package: {configured_package}")
-        return configured_package
-
-    for app_package in SUPPORTED_APP_PACKAGES:
-        if _is_app_package_installed(device_serial, app_package):
-            print(f"Using Operit application package: {app_package}")
-            return app_package
-
-    supported = ", ".join(SUPPORTED_APP_PACKAGES)
-    raise ToolPkgDebugError(
-        f"Neither supported Operit application package is installed on {device_serial}: {supported}"
-    )
+    # Resolve the applicationId before building external paths and scoped actions.
+    configured_package = (
+        requested_package or os.environ.get(APP_PACKAGE_ENV, "")
+    ).strip() or DEFAULT_APP_PACKAGE
+    if APP_PACKAGE_PATTERN.fullmatch(configured_package) is None:
+        raise ToolPkgDebugError(f"Invalid Android applicationId: {configured_package}")
+    if not _is_app_package_installed(device_serial, configured_package):
+        raise ToolPkgDebugError(
+            f"Application package is not installed on {device_serial}: {configured_package}"
+        )
+    print(f"Using application package: {configured_package}")
+    return configured_package
 
 
 def install_toolpkg(
@@ -308,7 +295,7 @@ def install_toolpkg(
 ) -> None:
     action_debug_install_toolpkg = f"{app_package}.DEBUG_INSTALL_TOOLPKG"
     receiver_component = (
-        f"{app_package}/.core.tools.packTool.ToolPkgDebugInstallReceiver"
+        f"{app_package}/com.ai.assistance.operit.core.tools.packTool.ToolPkgDebugInstallReceiver"
     )
     remote_packages_dir = f"/sdcard/Android/data/{app_package}/files/packages"
     remote_file = f"{remote_packages_dir}/{safe_remote_file_name(source.package_id)}"
@@ -389,8 +376,8 @@ def parse_args() -> argparse.Namespace:
         dest="app_package",
         default=None,
         help=(
-            "Operit applicationId to debug. Supports com.ai.assistance.operit.debug and "
-            "com.ai.assistance.operit; defaults to OPERIT_APP_PACKAGE or automatic Debug-first detection."
+            "applicationId to debug. Defaults to OPERIT_APP_PACKAGE or "
+            f"{DEFAULT_APP_PACKAGE}."
         ),
     )
     parser.add_argument(

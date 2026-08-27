@@ -69,7 +69,7 @@ METADATA
                 },
                 {
                     "name": "download_dir",
-                    "description": { "zh": "下载目录 (可选, 默认: /sdcard/Download/Operit/plugins/jmcomic_downloader/downloads)", "en": "Download directory (optional; default: /sdcard/Download/Operit/plugins/jmcomic_downloader/downloads)." },
+                    "description": { "zh": "下载目录（可选；默认使用应用为本插件分配的数据目录下的 downloads 子目录）", "en": "Download directory (optional; defaults to the downloads subdirectory in this plugin's app-managed data directory)." },
                     "type": "string",
                     "required": false
                 }
@@ -87,7 +87,7 @@ METADATA
                 },
                 {
                     "name": "download_dir",
-                    "description": { "zh": "下载目录 (可选, 默认: /sdcard/Download/Operit/plugins/jmcomic_downloader/downloads)", "en": "Download directory (optional; default: /sdcard/Download/Operit/plugins/jmcomic_downloader/downloads)." },
+                    "description": { "zh": "下载目录（可选；默认使用应用为本插件分配的数据目录下的 downloads 子目录）", "en": "Download directory (optional; defaults to the downloads subdirectory in this plugin's app-managed data directory)." },
                     "type": "string",
                     "required": false
                 }

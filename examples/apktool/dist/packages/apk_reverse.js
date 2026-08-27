@@ -313,9 +313,9 @@ function getCommonClasses() {
 function ensureJvmCompatibilitySystemProperties() {
     const System = Java.type("java.lang.System");
     const Locale = Java.type("java.util.Locale");
-    const File = Java.type("java.io.File");
-    const filesDir = new File("/data/data/com.ai.assistance.operit/files");
-    const cacheDir = new File("/data/data/com.ai.assistance.operit/cache");
+    const applicationContext = getApplicationContext();
+    const filesDir = applicationContext.getFilesDir();
+    const cacheDir = applicationContext.getCacheDir();
     const locale = Locale.getDefault();
     const country = asText(locale.getCountry()).trim();
     ensureSystemProperty(System, "os.name", JVM_COMPAT_OS_NAME);

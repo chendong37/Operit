@@ -1934,7 +1934,7 @@ fun NodeDialog(
                                             // 设置默认配置示例
                                             triggerConfig = when (key) {
                                                 "schedule" -> """{"schedule_type":"interval","interval_ms":"900000","repeat":"true","enabled":"true"}"""
-                                                "tasker" -> """{"variable_name": "%evtprm()"}"""
+                                                "tasker" -> """{"command": "start_meeting"}"""
                                                 "intent" -> """{"action": "com.example.MY_ACTION"}"""
                                                 "speech" -> """{"pattern": "(?i)\\bhello\\b", "ignore_case": "true", "require_final": "true", "cooldown_ms": "3000"}"""
                                                 else -> "{}"

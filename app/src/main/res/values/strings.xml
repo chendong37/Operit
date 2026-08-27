@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Operit AI</string>
+    <string name="app_name">知行 AI</string>
     <string name="accessibility_service_description">用于获取UI层次结构，为AI助手提供更快速的界面分析能力，不会收集或存储任何个人信息。</string>
     
     <!-- 模型选择器相关 -->
@@ -251,6 +251,11 @@
     <string name="workflow_trigger_type_manual">手动触发</string>
     <string name="workflow_trigger_type_schedule">定时触发</string>
     <string name="workflow_trigger_type_tasker">Tasker 触发</string>
+    <string name="workflow_tasker_action_label">知行 AI 工作流</string>
+    <string name="workflow_tasker_command_desc">填写要触发的工作流命令。它必须与工作流中 Tasker 触发器的 command 完全一致。</string>
+    <string name="workflow_tasker_command_hint">例如：start_meeting</string>
+    <string name="workflow_tasker_command_required">工作流命令不能为空</string>
+    <string name="workflow_tasker_save">保存到 Tasker</string>
     <string name="workflow_trigger_type_intent">Intent 触发</string>
     <string name="workflow_trigger_type_speech">语音触发</string>
     <string name="workflow_trigger_type_app_open">打开 App 时触发</string>
@@ -553,7 +558,7 @@
     <string name="danger_zone">危险区域</string>
     <string name="chat_statistics">聊天记录统计</string>
     <string name="current_chats">当前共有 %1$d 条聊天记录</string>
-    <string name="backup_location">备份文件保存在「下载/Operit/backup」文件夹中</string>
+    <string name="backup_location">备份文件保存在「下载/ZhixingAI/backup」文件夹中</string>
     <string name="faq_backup">常见问题</string>
     <string name="history_filter_role_card">按角色卡分类</string>
     <string name="history_filter_role_card_desc">角色卡-文件夹-对话三级分类</string>
@@ -583,9 +588,9 @@
     <string name="termux_setup_guide">Termux 设置向导</string>
     
     <!-- About Screen -->
-    <string name="about_title">关于 Operit AI</string>
+    <string name="about_title">关于知行 AI</string>
     <string name="about_version">版本: %1$s</string>
-    <string name="about_description">Operit AI是一个智能助手应用，能够帮助用户更高效地使用设备，提供界面分析、聊天对话等功能。</string>
+    <string name="about_description">知行 AI 是基于 Operit 定制的团队智能助手，面向手机自动化、知识管理、软件研发协作与教学资料建设。</string>
     <string name="about_developer">开发者: &lt;a href="https://github.com/AAswordman"&gt;AAswordman&lt;/a&gt;</string>
     <string name="about_contact">联系我们: aaswordsman@foxmail.com</string>
     <string name="about_website">&lt;a href="https://github.com/AAswordman/Operit"&gt;GitHub: https://github.com/AAswordman/Operit&lt;/a&gt;</string>
@@ -608,7 +613,7 @@
     <string name="network_status_label">网络状态</string>
 
     <!-- Configuration Screen -->
-    <string name="config_title">Operit AI 助手</string>
+    <string name="config_title">知行 AI 助手</string>
     <string name="config_description">使用 DeepSeek API Key，或配置其他模型服务</string>
     <string name="config_api_key_label">API密钥</string>
     <string name="config_api_key_placeholder">DeepSeek API密钥</string>
@@ -1063,7 +1068,7 @@
     <string name="copy_path">复制路径</string>
     <string name="path_copied_to_clipboard">路径已复制到剪贴板</string>
     <string name="open_file_manager">打开文件管理器</string>
-    <string name="navigate_to_external_files">请导航到Android/data/com.ai.assistance.operit/files/packages目录</string>
+    <string name="navigate_to_external_files">请导航到 Android/data 下当前应用的 files/packages 目录</string>
     <string name="package_js_only">仅支持 JavaScript(.js) 和 ToolPkg(.toolpkg) 文件</string>
     <string name="package_script_only">仅支持 HJSON(.hjson)、JavaScript(.js) 和 TypeScript(.ts) 文件</string>
     <string name="plugin_toolpkg_only">仅支持 ToolPkg(.toolpkg) 文件</string>
@@ -1190,42 +1195,42 @@
     <string name="permission_guide_next">下一步</string>
     <string name="permission_guide_complete">完成</string>
     <string name="permission_guide_welcome">欢迎</string>
-    <string name="permission_guide_basic_permissions">基础权限设置</string>
+    <string name="permission_guide_basic_permissions">按需权限设置</string>
     <string name="permission_guide_permission_level">权限级别选择</string>
     
     <string name="permission_guide_welcome_title">欢迎使用</string>
-    <string name="permission_guide_welcome_desc">在开始使用应用前，我们需要设置一些基本权限并选择您偏好的权限级别。</string>
+    <string name="permission_guide_welcome_desc">开始使用前，请按实际功能选择权限档位；无需一次授予所有权限。</string>
     <string name="permission_guide_welcome_hint">这个过程只需要几分钟，将帮助应用更好地为您服务。</string>
     <string name="permission_guide_welcome_start">点击右下角按钮开始设置</string>
     
-    <string name="permission_guide_basic_title">基础权限设置</string>
-    <string name="permission_guide_basic_desc">请授予以下基础权限，以确保应用正常运行</string>
+    <string name="permission_guide_basic_title">按需功能权限</string>
+    <string name="permission_guide_basic_desc">这些权限不是全部必需。只为当前要使用的功能授权，稍后可在设置中调整</string>
     <string name="permission_guide_storage_title">存储权限</string>
-    <string name="permission_guide_storage_desc">允许应用读写文件</string>
+    <string name="permission_guide_storage_desc">需要管理共享文件时再授权</string>
     <string name="permission_guide_overlay_title">悬浮窗权限</string>
-    <string name="permission_guide_overlay_desc">允许应用显示悬浮窗</string>
+    <string name="permission_guide_overlay_desc">需要悬浮对话或手机自动化时再授权</string>
     <string name="permission_guide_battery_title">电池优化豁免</string>
-    <string name="permission_guide_battery_desc">允许应用在后台运行</string>
+    <string name="permission_guide_battery_desc">需要持续后台任务时再设置为不限制</string>
     <string name="permission_guide_location_title">位置权限</string>
-    <string name="permission_guide_location_desc">允许应用获取位置信息</string>
+    <string name="permission_guide_location_desc">默认不授权；仅位置相关任务需要</string>
     <string name="permission_guide_check_permissions">检查权限状态</string>
-    <string name="permission_guide_all_granted">所有基础权限已授予，可以继续下一步</string>
+    <string name="permission_guide_all_granted">当前列出的按需权限均已开启，可以继续下一步</string>
     
-    <string name="permission_guide_warning_title">权限授予不完整</string>
-    <string name="permission_guide_warning_message">您尚未授予所有必要权限，这可能导致应用功能不完整或异常退出。确定要继续吗？</string>
+    <string name="permission_guide_warning_title">部分按需权限未开启</string>
+    <string name="permission_guide_warning_message">可以继续；未授权的权限只会影响对应功能，使用时再按提示开启即可。</string>
     <string name="permission_guide_warning_continue">继续</string>
     <string name="permission_guide_warning_return">返回授权</string>
     
     <string name="permission_guide_level_title">选择权限级别</string>
-    <string name="permission_guide_level_desc">请选择您偏好的权限级别，这将决定应用可以使用的功能范围</string>
+    <string name="permission_guide_level_desc">默认推荐普通权限 + 无障碍；Shizuku 仅在需要 ADB 能力时启用，Root 仅限设备本来已经 Root 的例外情况</string>
     <string name="permission_guide_standard_title">标准权限</string>
     <string name="permission_guide_standard_desc">基本的应用运行权限，无需特殊权限</string>
-    <string name="permission_guide_accessibility_title">无障碍权限</string>
-    <string name="permission_guide_accessibility_desc">通过无障碍服务实现屏幕内容分析和模拟操作</string>
+    <string name="permission_guide_accessibility_title">无障碍权限（推荐）</string>
+    <string name="permission_guide_accessibility_desc">手机自动化基线；仍需您在系统设置中手动开启服务</string>
     <string name="permission_guide_debugger_title">调试权限</string>
-    <string name="permission_guide_debugger_desc">通过Shizuku提供ADB级别的系统访问</string>
-    <string name="permission_guide_root_title">Root权限</string>
-    <string name="permission_guide_root_desc">超级用户权限，可执行任意系统操作</string>
+    <string name="permission_guide_debugger_desc">可选增强；通过 Shizuku 提供非 Root 的 ADB 级能力</string>
+    <string name="permission_guide_root_title">Root 权限（例外）</string>
+    <string name="permission_guide_root_desc">仅限设备本来已经 Root 且由负责人管理；不是安装或使用前提</string>
     <string name="permission_guide_confirm">确认选择</string>
     <string name="permission_guide_change_anytime">您随时可以在设置中更改权限级别</string>
     
@@ -1246,20 +1251,21 @@
     <string name="wizard_open_docs">官方文档</string>
     
     <!-- RootWizardCard -->
-    <string name="root_wizard_title">Root权限设置向导</string>
-    <string name="root_wizard_step1">步骤1：Root设备</string>
+    <string name="root_wizard_title">已有 Root 设备例外设置</string>
+    <string name="root_wizard_step1">Root 未启用（正常）</string>
     <string name="root_wizard_step2">步骤2：授予Root权限</string>
     <string name="root_wizard_completed">Root权限已配置完成</string>
-    <string name="root_wizard_success_message">恭喜！Root权限已获取，您现在可以执行需要特权的操作。</string>
+    <string name="root_wizard_success_message">已获得 Root 权限。高权限命令仍需逐次确认，并仅用于已批准的精确操作。</string>
     <string name="root_wizard_test_command">测试Root命令</string>
-    <string name="root_wizard_device_rooted_message">检测到您的设备已Root，但应用尚未获得Root权限。请点击下方按钮向ROOT管理器（如Magisk、SuperSU等）申请权限。</string>
-    <string name="root_wizard_how_to_get_root">如何获取Root权限：</string>
-    <string name="root_wizard_how_to_get_root_steps">1. 点击下方\"请求Root权限\"按钮\n2. 在弹出的ROOT管理器窗口中选择\"允许\"\n3. 如未看到弹窗，请检查ROOT管理器设置</string>
-    <string name="root_wizard_request_permission">请求Root权限</string>
+    <string name="root_wizard_device_rooted_message">仅当这台设备本来已经 Root、已登记并获准使用时，才向 Root 管理器申请知行 AI 的授权。</string>
+    <string name="root_wizard_how_to_get_root">启用已有 Root 授权：</string>
+    <string name="root_wizard_how_to_get_root_steps">1. 核对设备登记、知行 AI 包名与签名\n2. 点击下方按钮\n3. 在 Root 管理器中核对并明确允许</string>
+    <string name="root_wizard_request_permission">请求已有 Root 授权</string>
+    <string name="root_wizard_check_existing_root">检测并请求已有 Root 授权</string>
     <string name="root_wizard_view_tutorial">查看Root教程</string>
-    <string name="root_wizard_device_not_rooted">未检测到您的设备已Root。ROOT需要特定的系统修改，且可能会导致设备保修失效。如需使用ROOT功能，请先完成设备ROOT操作。</string>
-    <string name="root_wizard_risk_notice">注意：Root操作风险提示</string>
-    <string name="root_wizard_risk_details">1. ROOT操作具有一定风险，可能导致设备保修失效\n2. 部分应用可能会拒绝在ROOT设备上运行\n3. 不当的ROOT操作可能导致系统不稳定</string>
+    <string name="root_wizard_device_not_rooted">Root 不是知行 AI 的安装或使用前提。普通权限 + 无障碍是默认方案，需要 ADB 能力时可选 Shizuku。不要为了使用知行 AI 给设备 Root；若设备本来已经 Root，可在确认登记后点下方按钮。</string>
+    <string name="root_wizard_risk_notice">Root 不是团队基线</string>
+    <string name="root_wizard_risk_details">本应用不提供解锁、刷机或 Root 教程。Root 仅保留给本来已经 Root 的受管设备；每条高权限命令仍需单独确认。</string>
     
     <!-- ShizukuWizardCard -->
     <string name="shizuku_wizard_title">Shizuku 设置向导</string>
@@ -1383,25 +1389,25 @@
     
     <!-- 权限级别描述 -->
     <string name="permission_level_standard">标准权限</string>
-    <string name="permission_level_accessibility">无障碍权限</string>
+    <string name="permission_level_accessibility">无障碍权限（推荐）</string>
     <string name="permission_level_admin">管理员权限</string>
     <string name="permission_level_debugger">调试权限</string>
     <string name="permission_level_root">Root权限</string>
     <string name="permission_level_standard_desc">基本应用运行权限，无需系统特殊授权</string>
     <string name="permission_level_accessibility_desc">增加了无障碍服务支持，可模拟屏幕操作</string>
     <string name="permission_level_admin_desc">添加设备管理员权限，可访问更多系统功能</string>
-    <string name="permission_level_debugger_desc">通过Shizuku提供ADB级别的系统访问</string>
-    <string name="permission_level_root_desc">超级用户权限，可执行任意系统操作</string>
+    <string name="permission_level_debugger_desc">可选增强：通过 Shizuku 提供非 Root 的 ADB 级能力</string>
+    <string name="permission_level_root_desc">仅限本来已经 Root 的受管设备；不是安装或使用前提</string>
     <string name="permission_level_standard_full_desc">标准权限：基本的应用运行权限，无需特殊权限</string>
-    <string name="permission_level_accessibility_full_desc">无障碍权限：允许应用模拟用户操作，需要开启无障碍服务</string>
+    <string name="permission_level_accessibility_full_desc">无障碍权限（推荐）：手机自动化基线，需要用户在系统中手动开启服务</string>
     <string name="permission_level_admin_full_desc">管理员权限：允许应用访问更多系统功能，如位置服务等</string>
-    <string name="permission_level_debugger_full_desc">调试权限：允许通过ADB调试功能进行高级操作，需要Shizuku服务</string>
-    <string name="permission_level_root_full_desc">Root权限：允许应用以超级用户身份运行，需要设备已Root</string>
+    <string name="permission_level_debugger_full_desc">调试权限（可选）：通过 Shizuku 提供非 Root 的 ADB 级能力</string>
+    <string name="permission_level_root_full_desc">Root 权限（例外）：仅供本来已经 Root 且登记受管的设备显式启用</string>
     
     <!-- Root 状态信息 -->
     <string name="root_access_granted">应用已获取Root权限，可执行特权命令</string>
     <string name="device_rooted_request_permission">设备已Root，点击申请应用权限</string>
-    <string name="device_not_rooted">设备未Root，无法获取Root权限</string>
+    <string name="device_not_rooted">Root 未启用；默认使用无障碍，ADB 能力可选 Shizuku</string>
     
     <!-- Toast 消息 -->
     <string name="toast_download_link_failed">无法打开下载链接</string>
@@ -1531,6 +1537,7 @@
     
     <!-- 关于屏幕 -->
     <string name="check_for_updates">检查更新</string>
+    <string name="internal_update_distribution">内部版本由团队分发</string>
     <string name="checking_updates">检查中...</string>
     <string name="new_version_found">发现新版本</string>
     <string name="check_complete">检查完成</string>
@@ -4362,9 +4369,9 @@
     <string name="import_color_qr">导入多维码</string>
     <string name="scan_color_qr">扫描多维码</string>
     <string name="tavern_json">酒馆 JSON</string>
-    <string name="export_tavern_json_desc">导出为 .json 并保存到 Download/Operit/exports</string>
+    <string name="export_tavern_json_desc">导出为 .json 并保存到 Download/ZhixingAI/exports</string>
     <string name="tavern_png">酒馆 PNG</string>
-    <string name="export_tavern_png_desc">导出为可导入酒馆的图片，并保存到 Download/Operit/exports</string>
+    <string name="export_tavern_png_desc">导出为可导入酒馆的图片，并保存到 Download/ZhixingAI/exports</string>
     <string name="image_read_error">无法读取图片</string>
     <string name="image_parse_error">无法解析图片</string>
     <string name="color_qr_not_recognized">无法识别彩色多维码</string>
@@ -4748,11 +4755,11 @@
     <string name="artifact_project_node_selection_hint">点击节点选中，再次点击可取消。</string>
     <string name="plugin_creation_fresh_task_line">请你激活operit editor，并使用沙盒包开发 dev 工具包开发新的沙盒包。</string>
     <string name="plugin_creation_fresh_package_rule_line">先确定新的沙盒包 id，后续不要改名。</string>
-    <string name="plugin_creation_fresh_dev_directory_line">开发目录固定为 手机下载/Operit/dev_package/你确定的id。开发、安装和测试都只在这里完成。</string>
+    <string name="plugin_creation_fresh_dev_directory_line">开发目录固定为 手机下载/ZhixingAI/dev_package/你确定的id。开发、安装和测试都只在这里完成。</string>
     <string name="plugin_creation_continue_task_line">请你激活operit editor，查找沙盒包 %1$s 的位置，在此版本基础上继续开发并测试。</string>
     <string name="plugin_creation_merge_task_line">请你激活operit editor，查找沙盒包 %1$s 的位置，在此版本基础上做合并开发并测试。</string>
     <string name="plugin_creation_existing_package_rule_line">当前沙盒包 id 是 %1$s。包 id 和插件名字都必须沿用，不要改名，也不要新起包。</string>
-    <string name="plugin_creation_existing_dev_directory_line">开发目录固定为 手机下载/Operit/dev_package/%1$s。开发、安装和测试都只在这里完成。</string>
+    <string name="plugin_creation_existing_dev_directory_line">开发目录固定为 手机下载/ZhixingAI/dev_package/%1$s。开发、安装和测试都只在这里完成。</string>
     <string name="plugin_creation_update_sandbox_package_dev">先更新 SandboxPackage_DEV。</string>
     <string name="plugin_creation_copy_types_to_dev_dir">把 skills 里的 types 覆盖复制到开发目录。</string>
     <string name="plugin_creation_use_terminal_ts_js_hint">尽量用终端，优先写 ts 和 js，再编译出最终 js。tsconfig 参考 examples。</string>
@@ -5087,13 +5094,13 @@
     <string name="external_http_chat_enable">启用外部 HTTP 服务</string>
     <string name="external_http_chat_enable_desc">开启后会启动外部 HTTP 服务，实际监听 0.0.0.0；同一端口既提供 HTTP API，也提供可直接访问的网页聊天界面</string>
     <string name="external_http_chat_port">监听端口</string>
-    <string name="external_http_chat_port_desc">默认 8094。服务会监听 0.0.0.0:端口；保存后会在启用状态下自动重启服务</string>
+    <string name="external_http_chat_port_desc">默认 18094。服务会监听 0.0.0.0:端口；保存后会在启用状态下自动重启服务</string>
     <string name="external_http_chat_save_port">保存端口</string>
     <string name="external_http_chat_port_saved">端口已保存</string>
     <string name="external_http_chat_invalid_port">端口无效，请输入 1-65535</string>
     <string name="external_http_chat_token">Bearer Token</string>
-    <string name="external_http_chat_token_desc">首次启用时自动生成。客户端需要在 Authorization 头中携带 Bearer Token</string>
-    <string name="external_http_chat_token_not_generated">尚未生成，请先启用服务</string>
+    <string name="external_http_chat_token_desc">进入本页时自动生成。HTTP 请求放入 Authorization 头，Intent 自动化放入 auth_token extra；重置后所有外部入口立即失效</string>
+    <string name="external_http_chat_token_not_generated">正在生成，请稍后重试</string>
     <string name="external_http_chat_copy_token">复制 Token</string>
     <string name="external_http_chat_reset_token">重置 Token</string>
     <string name="external_http_chat_token_copied">Token 已复制</string>
@@ -5114,8 +5121,8 @@
     <string name="external_http_chat_async_example">异步回调示例</string>
     <string name="external_http_chat_health_example">健康检查示例</string>
     <string name="external_http_chat_intent_title">Intent 调用说明</string>
-    <string name="external_http_chat_intent_desc">广播入口仍然保留，适合本机 App 集成、Tasker 或 adb 调试</string>
-    <string name="external_http_chat_intent_overview">HTTP 与 Intent 参数语义一致，仅入口不同。\n\n请求 Action：%1$s\n默认回传 Action：%2$s\n\n常用 extras：message、request_id、group、create_new_chat、chat_id、create_if_none、show_floating、return_tool_status、initial_mode、auto_exit_after_ms、stop_after、reply_action、reply_package\n\n处理完成后会通过广播回传 success、chat_id、ai_response、error；如果只希望回传给指定 App，请设置 reply_package。</string>
+    <string name="external_http_chat_intent_desc">本机 App、Tasker 或 adb 必须使用显式 Receiver 组件并携带上方同一个 Token</string>
+    <string name="external_http_chat_intent_overview">HTTP 与 Intent 参数语义一致，仅入口不同。\n\n请求 Action：%1$s\n默认回传 Action：%2$s\n\n鉴权 extra：auth_token（必填）\n常用 extras：message、request_id、group、create_new_chat、chat_id、create_if_none、show_floating、return_tool_status、initial_mode、auto_exit_after_ms、stop_after、reply_action、reply_package\n\n处理完成后会通过显式广播回传 success、chat_id、ai_response、error。外部调用方必须设置 reply_package；未设置时结果只发回知行 AI 自身。</string>
     <string name="external_http_chat_copy_example">复制示例</string>
     <string name="external_http_chat_example_copied">示例命令已复制</string>
     <string name="external_http_chat_service_enabled">服务已启用</string>
@@ -5317,22 +5324,22 @@
 
     <!-- 默认助手设置引导 -->
     <string name="default_assistant_guide_title">设置默认语音助手</string>
-    <string name="default_assistant_guide_subtitle">让Operit成为您的智能助手</string>
-    <string name="default_assistant_guide_intro">将Operit设置为系统默认助手后，您可以通过长按Home键或使用语音唤醒快速启动Operit语音助手，获得更便捷的AI交互体验。</string>
+    <string name="default_assistant_guide_subtitle">让知行 AI 成为您的智能助手</string>
+    <string name="default_assistant_guide_intro">将知行 AI 设置为系统默认助手后，您可以通过长按 Home 键或系统手势快速启动语音助手。</string>
     <string name="default_assistant_guide_steps_title">设置步骤</string>
     
     <!-- 步骤1: 设置为默认助理 -->
     <string name="default_assistant_guide_step1_title">设置为默认助理</string>
-    <string name="default_assistant_guide_step1_desc">将 Operit 设置为系统的默认数字助理应用</string>
+    <string name="default_assistant_guide_step1_desc">将知行 AI 设置为系统的默认数字助理应用</string>
     <string name="default_assistant_guide_step1_detail1">• 打开系统设置 → 应用 → 默认应用 → 数字助理应用</string>
-    <string name="default_assistant_guide_step1_detail2">• 在助手应用列表中找到并选择"Operit AI"</string>
+    <string name="default_assistant_guide_step1_detail2">• 在助手应用列表中找到并选择“知行 AI”</string>
     <string name="default_assistant_guide_step1_detail_android12">Android 12+: 设置 → 应用 → 默认应用 → 数字助理应用 → 默认数字助理应用</string>
     <string name="default_assistant_guide_open_settings">打开助理设置</string>
     
     <!-- 步骤2: 配置启动手势 -->
     <string name="default_assistant_guide_open_gesture_settings">打开手势设置</string>
     <string name="default_assistant_guide_step2_title">配置启动手势</string>
-    <string name="default_assistant_guide_step2_desc">设置如何快速唤起 Operit 助手</string>
+    <string name="default_assistant_guide_step2_desc">设置如何快速唤起知行 AI 助手</string>
     <string name="default_assistant_guide_step2_detail1">• 长按Home键：最常用的方式，在大部分设备上都可用</string>
     <string name="default_assistant_guide_step2_detail2">• 从屏幕底部向上滑动：部分支持全面屏手势的设备</string>
     <string name="default_assistant_guide_step2_detail_android12">Android 12+: 设置 → 应用 → 默认应用 → 数字助理应用 → 默认数字助理应用</string>
@@ -5342,22 +5349,22 @@
     <!-- 步骤4: 测试语音助手 -->
     <string name="default_assistant_guide_step4_title">测试语音助手</string>
     <string name="default_assistant_guide_step4_desc">设置完成后，测试是否能正常启动</string>
-    <string name="default_assistant_guide_step4_detail1">• 长按Home键（主屏幕按钮）应该会调起 Operit 语音助手</string>
-    <string name="default_assistant_guide_step4_detail2">• 如果设备支持语音唤醒，说"Hey Google"或设备指定的唤醒词也可能触发 Operit</string>
+    <string name="default_assistant_guide_step4_detail1">• 长按 Home 键（主屏幕按钮）应该会调起知行 AI 语音助手</string>
+    <string name="default_assistant_guide_step4_detail2">• 如果设备支持语音唤醒，说“Hey Google”或设备指定的唤醒词也可能触发知行 AI</string>
     
     <!-- 步骤3: 测试助手功能 -->
     <string name="default_assistant_guide_step3_title">测试助手功能</string>
-    <string name="default_assistant_guide_step3_desc">完成设置后，测试 Operit 是否能正常唤起</string>
+    <string name="default_assistant_guide_step3_desc">完成设置后，测试知行 AI 是否能正常唤起</string>
     <string name="default_assistant_guide_step3_detail1">• 使用您设置的手势（如长按Home键）唤起助手</string>
-    <string name="default_assistant_guide_step3_detail2">• 如果成功，应该会看到 Operit 的语音助手界面</string>
+    <string name="default_assistant_guide_step3_detail2">• 如果成功，应该会看到知行 AI 的语音助手界面</string>
     <string name="default_assistant_guide_step3_detail3">• 可以尝试说话或输入文字与助手交互</string>
     
     <!-- 疑难解答 -->
     <string name="default_assistant_guide_troubleshooting_title">遇到问题？</string>
-    <string name="default_assistant_guide_troubleshooting_content">如果在列表中找不到Operit，请确保：\n\n• 应用已正确安装且未被禁用\n• 已授予必要的权限（麦克风、悬浮窗等）\n• 尝试重启设备后再次设置\n\n部分定制系统可能限制第三方应用作为默认助手，如遇此情况，您仍可通过应用内的悬浮窗功能使用Operit。</string>
+    <string name="default_assistant_guide_troubleshooting_content">如果在列表中找不到知行 AI，请确保：\n\n• 应用已正确安装且未被禁用\n• 已授予必要的权限（麦克风、悬浮窗等）\n• 尝试重启设备后再次设置\n\n部分定制系统可能限制第三方应用作为默认助手，如遇此情况，您仍可通过应用内的悬浮窗功能使用知行 AI。</string>
     
     <!-- Voice Interaction Service -->
-    <string name="voice_interaction_service_name">Operit AI 助手</string>
+    <string name="voice_interaction_service_name">知行 AI 助手</string>
     <string name="voice_interaction_service_summary">智能语音助手服务</string>
 
     <!-- Tool Permission Settings -->
@@ -5645,7 +5652,7 @@
     <string name="start_with_new_chat_description">开启后，每次启动应用都会进入一个新的空白聊天界面，不再自动打开上一次聊天。</string>
     <string name="software_identity_title">软件标识</string>
     <string name="software_identity_description">更改侧边栏顶部显示的软件标识。</string>
-    <string name="software_identity_option_operit">Operit AI</string>
+    <string name="software_identity_option_operit">知行 AI</string>
     <string name="software_identity_option_lingshu">灵枢 AI</string>
     <string name="reset_all_display_settings">重置所有显示设置</string>
     <string name="ui_accessibility_mode">无障碍适配模式</string>
@@ -5768,7 +5775,7 @@
     <string name="backup_room_db_restart_later">稍后</string>
     <string name="backup_room_db_last_success">上次成功备份：%1$s</string>
     <string name="backup_room_db_last_error">上次错误：%1$s</string>
-    <string name="backup_files_location_hint">提示：备份文件保存在 Download/Operit 文件夹</string>
+    <string name="backup_files_location_hint">提示：备份文件保存在 Download/ZhixingAI 文件夹</string>
 
     <string name="backup_raw_snapshot_title">文件快照备份（实验）</string>
     <string name="backup_raw_snapshot_subtitle">以文件/目录为单位的整体压缩备份与恢复</string>
@@ -7540,7 +7547,7 @@
     <string name="html_export_updated">更新</string>
     <string name="html_export_group">分组</string>
     <string name="html_export_message_count">消息数</string>
-    <string name="html_export_footer">导出自 Operit AI Assistant</string>
+    <string name="html_export_footer">导出自知行 AI</string>
 
     <!-- MnnModelDownloadManager (新增) -->
     <string name="mnn_no_cache_data">无缓存数据</string>

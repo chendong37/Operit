@@ -16,7 +16,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -41,7 +40,6 @@ import com.ai.assistance.operit.R
  * @param showWizard 是否显示向导详情
  * @param onToggleWizard 切换向导显示状态的回调
  * @param onRequestRoot 请求Root权限的回调
- * @param onWatchTutorial 查看教程的回调
  */
 @Composable
 fun RootWizardCard(
@@ -49,8 +47,7 @@ fun RootWizardCard(
         hasRootAccess: Boolean,
         showWizard: Boolean,
         onToggleWizard: () -> Unit,
-        onRequestRoot: () -> Unit,
-        onWatchTutorial: () -> Unit
+        onRequestRoot: () -> Unit
 ) {
         Surface(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
@@ -361,25 +358,6 @@ fun RootWizardCard(
                                                                 )
                                                         }
 
-                                                        Spacer(modifier = Modifier.height(8.dp))
-
-                                                        OutlinedButton(
-                                                                onClick = onWatchTutorial,
-                                                                modifier = Modifier.fillMaxWidth(),
-                                                                shape = RoundedCornerShape(8.dp),
-                                                                contentPadding =
-                                                                        PaddingValues(
-                                                                                vertical = 12.dp
-                                                                        )
-                                                        ) {
-                                                                Text(
-                                                                        stringResource(
-                                                                                R.string
-                                                                                        .root_wizard_view_tutorial
-                                                                        ),
-                                                                        fontSize = 14.sp
-                                                                )
-                                                        }
                                                 }
                                         }
 
@@ -453,8 +431,8 @@ fun RootWizardCard(
 
                                                         Spacer(modifier = Modifier.height(16.dp))
 
-                                                        ElevatedButton(
-                                                                onClick = onWatchTutorial,
+                                                        OutlinedButton(
+                                                                onClick = onRequestRoot,
                                                                 modifier = Modifier.fillMaxWidth(),
                                                                 shape = RoundedCornerShape(8.dp),
                                                                 contentPadding =
@@ -465,7 +443,7 @@ fun RootWizardCard(
                                                                 Text(
                                                                         stringResource(
                                                                                 R.string
-                                                                                        .root_wizard_view_tutorial
+                                                                                        .root_wizard_check_existing_root
                                                                         ),
                                                                         fontSize = 14.sp
                                                                 )

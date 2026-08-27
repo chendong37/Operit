@@ -70,6 +70,10 @@ fun ExternalHttpChatSettingsScreen(onBackPressed: () -> Unit) {
     val bearerToken by preferences.bearerTokenFlow.collectAsState(initial = "")
     val serviceState by AIForegroundService.externalHttpState.collectAsState()
 
+    LaunchedEffect(preferences) {
+        preferences.ensureBearerToken()
+    }
+
     var portText by remember { mutableStateOf(savedPort.toString()) }
     LaunchedEffect(savedPort) {
         portText = savedPort.toString()
@@ -122,10 +126,12 @@ curl -X POST "$sampleBaseUrl/api/external-chat" \
             EXTERNAL_CHAT_RESULT_ACTION
         )
     }
-    val intentAdbExample = remember {
+    val intentAdbExample = remember(curlToken) {
         """
 adb shell am broadcast \
+  -n $EXTERNAL_CHAT_RECEIVER_COMPONENT \
   -a $EXTERNAL_CHAT_INTENT_ACTION \
+  --es auth_token "$curlToken" \
   --es request_id "req-001" \
   --es message "你好" \
   --ez show_floating true \
@@ -537,8 +543,13 @@ adb shell am broadcast \
     }
 }
 
-private const val EXTERNAL_CHAT_INTENT_ACTION = "com.ai.assistance.operit.EXTERNAL_CHAT"
-private const val EXTERNAL_CHAT_RESULT_ACTION = "com.ai.assistance.operit.EXTERNAL_CHAT_RESULT"
+private val EXTERNAL_CHAT_INTENT_ACTION =
+    com.ai.assistance.operit.core.application.AppIntentActions.externalChat
+private val EXTERNAL_CHAT_RESULT_ACTION =
+    com.ai.assistance.operit.core.application.AppIntentActions.externalChatResult
+private val EXTERNAL_CHAT_RECEIVER_COMPONENT =
+    "${com.ai.assistance.operit.BuildConfig.APPLICATION_ID}/" +
+        "com.ai.assistance.operit.integrations.intent.ExternalChatReceiver"
 
 @Composable
 private fun SettingsCard(

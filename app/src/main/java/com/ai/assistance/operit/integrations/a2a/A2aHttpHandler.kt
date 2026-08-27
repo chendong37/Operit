@@ -41,8 +41,8 @@ class A2aHttpHandler(
         }
         val card = JSONObject().apply {
             put("protocolVersion", A2A_PROTOCOL_VERSION)
-            put("name", "Operit")
-            put("description", "Operit assistant with text chat and tool-use capabilities")
+            put("name", BuildConfig.PRODUCT_NAME)
+            put("description", "Zhixing AI assistant with text chat and tool-use capabilities")
             put(
                 "supportedInterfaces",
                 JSONArray().put(
@@ -66,9 +66,9 @@ class A2aHttpHandler(
                 "skills",
                 JSONArray().put(
                     JSONObject().apply {
-                        put("id", "operit-chat")
-                        put("name", "Operit Chat")
-                        put("description", "Send a text task to Operit and receive a text response")
+                        put("id", "zhixing-chat")
+                        put("name", "Zhixing Chat")
+                        put("description", "Send a text task to Zhixing AI and receive a text response")
                         put("tags", JSONArray().put("chat").put("assistant").put("tools"))
                     }
                 )
@@ -81,7 +81,7 @@ class A2aHttpHandler(
                         "httpAuthSecurityScheme",
                         JSONObject().apply {
                             put("scheme", "Bearer")
-                            put("bearerFormat", "Operit Bearer Token")
+                            put("bearerFormat", "Zhixing AI Bearer Token")
                         }
                     )
                 )

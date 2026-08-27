@@ -37,6 +37,7 @@ import com.ai.assistance.operit.api.speech.SpeechPrerollStore
 import com.ai.assistance.operit.api.speech.SpeechService
 import com.ai.assistance.operit.api.speech.SpeechServiceFactory
 import com.ai.assistance.operit.core.application.OperitApplication
+import com.ai.assistance.operit.core.application.AppIntentActions
 import com.ai.assistance.operit.core.chat.AIMessageManager
 import com.ai.assistance.operit.core.application.ActivityLifecycleManager
 import com.ai.assistance.operit.core.application.ForegroundServiceCompat
@@ -108,33 +109,31 @@ class AIForegroundService : Service() {
         private const val REPLY_CHANNEL_ID_PREFIX = "AI_REPLY_COMPLETE_CHANNEL"
         private val REPLY_VIBRATION_PATTERN = longArrayOf(0L, 250L, 150L, 250L)
 
-        private const val ACTION_CANCEL_CURRENT_OPERATION = "com.ai.assistance.operit.action.CANCEL_CURRENT_OPERATION"
+        private val ACTION_CANCEL_CURRENT_OPERATION = AppIntentActions.cancelCurrentOperation
         private const val REQUEST_CODE_CANCEL_CURRENT_OPERATION = 9002
 
-        private const val ACTION_EXIT_APP = "com.ai.assistance.operit.action.EXIT_APP"
+        private val ACTION_EXIT_APP = AppIntentActions.exitApp
         private const val REQUEST_CODE_EXIT_APP = 9003
 
-        private const val ACTION_TOGGLE_WAKE_LISTENING = "com.ai.assistance.operit.action.TOGGLE_WAKE_LISTENING"
+        private val ACTION_TOGGLE_WAKE_LISTENING = AppIntentActions.toggleWakeListening
         private const val REQUEST_CODE_TOGGLE_WAKE_LISTENING = 9006
         private const val REPLY_NOTIFICATION_TAG_PREFIX = "ai_reply:"
 
-        private const val ACTION_SET_WAKE_LISTENING_SUSPENDED_FOR_IME =
-            "com.ai.assistance.operit.action.SET_WAKE_LISTENING_SUSPENDED_FOR_IME"
+        private val ACTION_SET_WAKE_LISTENING_SUSPENDED_FOR_IME =
+            AppIntentActions.setWakeListeningSuspendedForIme
         private const val EXTRA_IME_VISIBLE = "extra_ime_visible"
 
-        private const val ACTION_SET_WAKE_LISTENING_SUSPENDED_FOR_FLOATING_FULLSCREEN =
-            "com.ai.assistance.operit.action.SET_WAKE_LISTENING_SUSPENDED_FOR_FLOATING_FULLSCREEN"
+        private val ACTION_SET_WAKE_LISTENING_SUSPENDED_FOR_FLOATING_FULLSCREEN =
+            AppIntentActions.setWakeListeningSuspendedForFloatingFullscreen
         private const val EXTRA_FLOATING_FULLSCREEN_ACTIVE = "extra_floating_fullscreen_active"
 
-        const val ACTION_PREPARE_WAKE_HANDOFF =
-            "com.ai.assistance.operit.action.PREPARE_WAKE_HANDOFF"
+        val ACTION_PREPARE_WAKE_HANDOFF = AppIntentActions.prepareWakeHandoff
 
-        private const val ACTION_ENSURE_MICROPHONE_FOREGROUND =
-            "com.ai.assistance.operit.action.ENSURE_MICROPHONE_FOREGROUND"
-        private const val ACTION_START_OR_REFRESH_EXTERNAL_HTTP =
-            "com.ai.assistance.operit.action.START_OR_REFRESH_EXTERNAL_HTTP"
-        private const val ACTION_STOP_EXTERNAL_HTTP =
-            "com.ai.assistance.operit.action.STOP_EXTERNAL_HTTP"
+        private val ACTION_ENSURE_MICROPHONE_FOREGROUND =
+            AppIntentActions.ensureMicrophoneForeground
+        private val ACTION_START_OR_REFRESH_EXTERNAL_HTTP =
+            AppIntentActions.startOrRefreshExternalHttp
+        private val ACTION_STOP_EXTERNAL_HTTP = AppIntentActions.stopExternalHttp
 
         @Volatile
         private var lastRequestedImeVisible: Boolean = false

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Operit AI</string>
+    <string name="app_name">Zhixing AI</string>
     <string name="accessibility_service_description">Utilizat pentru a obțineUIIerarhie, pentruAIAsistentul oferă capacități mai rapide de analiză a interfeței și nu colectează sau stochează nicio informație personală.</string>
 
     <!-- 模型选择器相关 -->
@@ -554,7 +554,7 @@
     <string name="danger_zone">Zonă periculoasă</string>
     <string name="chat_statistics">Statistici privind istoricul conversațiilor</string>
     <string name="current_chats">În prezent, există în total %1$d Istoric de conversație</string>
-    <string name="backup_location">Fișierele de rezervă sunt salvate în folderul „Descărcări”/Operit/backupîn folderul „”</string>
+    <string name="backup_location">Fișierele de rezervă sunt salvate în folderul Descărcări/ZhixingAI/backup</string>
     <string name="faq_backup">Întrebări frecvente</string>
     <string name="history_filter_role_card">Clasificare după cărțile de personaj</string>
     <string name="history_filter_role_card_desc">Carte de personaj-Dosar-Clasificarea pe trei niveluri a dialogurilor</string>
@@ -1042,7 +1042,7 @@
     <string name="copy_path">Copiază calea</string>
     <string name="path_copied_to_clipboard">Calea a fost copiată în clipboard</string>
     <string name="open_file_manager">Deschideți managerul de fișiere</string>
-    <string name="navigate_to_external_files">Vă rugăm să accesațiAndroid/data/com.ai.assistance.operit/files/packagesCuprins</string>
+    <string name="navigate_to_external_files">Accesați directorul files/packages al aplicației curente din Android/data</string>
     <string name="package_js_only">Se acceptă doar JavaScript(.js) și ToolPkg(.toolpkg) Document</string>
     <string name="package_script_only">Se acceptă doar HJSON(.hjson),JavaScript(.js) și TypeScript(.ts) Document</string>
     <string name="plugin_toolpkg_only">Se acceptă doar ToolPkg(.toolpkg) Document</string>
@@ -4238,9 +4238,9 @@ Acum poate fi utilizat în interfața de dialog AutoGLM A devenit un model.</str
     <string name="import_color_qr">Importarea codurilor multidimensionale</string>
     <string name="scan_color_qr">Scanează codul multidimensional</string>
     <string name="tavern_json">Taverna JSON</string>
-    <string name="export_tavern_json_desc">Exportă ca .json și salvați în Download/Operit/exports</string>
+    <string name="export_tavern_json_desc">Exportă ca .json și salvați în Download/ZhixingAI/exports</string>
     <string name="tavern_png">Taverna PNG</string>
-    <string name="export_tavern_png_desc">Exportă imaginea într-un format compatibil cu Taverna și salveaz-o în Download/Operit/exports</string>
+    <string name="export_tavern_png_desc">Exportă imaginea într-un format compatibil cu Taverna și salveaz-o în Download/ZhixingAI/exports</string>
     <string name="image_read_error">Nu se poate citi imaginea</string>
     <string name="image_parse_error">Nu se poate interpreta imaginea</string>
     <string name="color_qr_not_recognized">Codul multidimensional color nu poate fi recunoscut</string>
@@ -4615,11 +4615,11 @@ Acum poate fi utilizat în interfața de dialog AutoGLM A devenit un model.</str
     <string name="artifact_project_node_selection_hint">Faceți clic pe nod pentru a-l selecta; faceți clic din nou pentru a anula selecția.</string>
     <string name="plugin_creation_fresh_task_line">Te rugăm să activezioperit editor, și să folosească pachetul Sandbox pentru dezvoltare dev Dezvoltarea unui nou pachet sandbox în cadrul kitului de instrumente.</string>
     <string name="plugin_creation_fresh_package_rule_line">Mai întâi, stabiliți noul pachet sandbox id, nu schimbați numele ulterior.</string>
-    <string name="plugin_creation_fresh_dev_directory_line">Catalogul de dezvoltare este setat în mod fix la „Descărcări pe telefonul mobil”/Operit/dev_package/Ești sigur?id. Dezvoltarea, instalarea și testarea se realizează exclusiv aici.</string>
+    <string name="plugin_creation_fresh_dev_directory_line">Catalogul de dezvoltare este setat la Descărcări/ZhixingAI/dev_package/ID-ul ales. Dezvoltarea, instalarea și testarea se realizează exclusiv aici.</string>
     <string name="plugin_creation_continue_task_line">Te rugăm să activezioperit editor, căutarea pachetului Sandbox %1$s locația, dezvoltarea și testarea vor continua pe baza acestei versiuni.</string>
     <string name="plugin_creation_merge_task_line">Te rugăm să activezioperit editor, căutarea pachetului Sandbox %1$s locația, pe baza acestei versiuni se va desfășura dezvoltarea comună și testarea.</string>
     <string name="plugin_creation_existing_package_rule_line">Pachetul actual din mediul de testare id Da %1$s. Pachet id Atât numele pluginului, cât și cel al pachetului trebuie păstrate; nu le schimbați și nu creați un pachet nou.</string>
-    <string name="plugin_creation_existing_dev_directory_line">Catalogul de dezvoltare este setat în mod fix la „Descărcări pe telefonul mobil”/Operit/dev_package/%1$s. Dezvoltarea, instalarea și testarea se realizează exclusiv aici.</string>
+    <string name="plugin_creation_existing_dev_directory_line">Catalogul de dezvoltare este setat la Descărcări/ZhixingAI/dev_package/%1$s. Dezvoltarea, instalarea și testarea se realizează exclusiv aici.</string>
     <string name="plugin_creation_update_sandbox_package_dev">Mai întâi actualizarea SandboxPackage_DEV.</string>
     <string name="plugin_creation_copy_types_to_dev_dir">Pune skills din types Copiați fișierul „cover” în directorul de dezvoltare.</string>
     <string name="plugin_creation_use_terminal_ts_js_hint">Folosiți pe cât posibil terminalul și acordați prioritate scrierii ts și js, apoi se compilează versiunea finală js.tsconfig Referință examples.</string>
@@ -4951,7 +4951,7 @@ Acum poate fi utilizat în interfața de dialog AutoGLM A devenit un model.</str
     <string name="external_http_chat_enable">Activare externă HTTP Servicii</string>
     <string name="external_http_chat_enable_desc">După activare, se va porni dispozitivul extern HTTP Servicii, monitorizare efectivă 0.0.0.0; același port oferă atât HTTP API, oferă, de asemenea, o interfață de chat web accesibilă direct</string>
     <string name="external_http_chat_port">Port de ascultare</string>
-    <string name="external_http_chat_port_desc">Implicit 8094. Serviciul va monitoriza 0.0.0.0:Port; după salvare, serviciul se va reporni automat în stare activă</string>
+    <string name="external_http_chat_port_desc">Implicit 18094. Serviciul va monitoriza 0.0.0.0:Port; după salvare, serviciul se va reporni automat în stare activă</string>
     <string name="external_http_chat_save_port">Salvare port</string>
     <string name="external_http_chat_port_saved">Portul a fost salvat</string>
     <string name="external_http_chat_invalid_port">Portul nu este valid. Vă rugăm să introduceți 1-65535</string>
@@ -5625,7 +5625,7 @@ Acum poate fi utilizat în interfața de dialog AutoGLM A devenit un model.</str
     <string name="backup_room_db_restart_later">Mai târziu</string>
     <string name="backup_room_db_last_success">Ultima copiere de rezervă reușită:%1$s</string>
     <string name="backup_room_db_last_error">Eroarea anterioară:%1$s</string>
-    <string name="backup_files_location_hint">Notă: Fișierul de rezervă este salvat în Download/Operit Dosar</string>
+    <string name="backup_files_location_hint">Notă: Fișierul de rezervă este salvat în Download/ZhixingAI Dosar</string>
 
     <string name="backup_raw_snapshot_title">Copie de rezervă a instantaneelor de fișiere (experimental)</string>
     <string name="backup_raw_snapshot_subtitle">pe baza documentului/Copierea de rezervă și restaurarea integrală, pe unități de index</string>

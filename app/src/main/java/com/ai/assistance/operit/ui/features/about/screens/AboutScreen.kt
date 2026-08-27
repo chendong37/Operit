@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.ai.assistance.operit.BuildConfig
 import com.ai.assistance.operit.R
 import com.ai.assistance.operit.data.updates.FullUpdateInstaller
 import com.ai.assistance.operit.data.updates.UpdateManager
@@ -520,6 +521,7 @@ fun AboutScreen(
 
     // 检查更新
     fun checkForUpdates() {
+        if (!BuildConfig.UPDATE_CHECK_ENABLED) return
         scope.launch { updateManager.checkForUpdates(appVersion) }
     }
 
@@ -864,7 +866,7 @@ fun AboutScreen(
                     ) {
                         Box(contentAlignment = Alignment.Center) {
                             Image(
-                                painter = painterResource(id = R.drawable.ic_launcher_simple_foreground),
+                                painter = painterResource(id = R.drawable.zhixing_ai_mark),
                                 contentDescription = stringResource(R.string.app_logo_description),
                                 modifier = Modifier.size(80.dp)
                             )
@@ -888,14 +890,19 @@ fun AboutScreen(
             }
 
             item {
-                val updateSubtitle = when (val status = updateStatus) {
-                    is UpdateStatus.Available -> context.getString(R.string.new_version, appVersion, status.newVersion)
-                    is UpdateStatus.PatchAvailable -> context.getString(R.string.new_version, appVersion, status.newVersion)
-                    is UpdateStatus.UpToDate -> context.getString(R.string.already_latest_version, appVersion)
-                    is UpdateStatus.Error -> status.message
-                    is UpdateStatus.Checking -> context.getString(R.string.checking_updates)
-                    else -> null
-                }
+                val updateSubtitle =
+                    if (!BuildConfig.UPDATE_CHECK_ENABLED) {
+                        context.getString(R.string.internal_update_distribution)
+                    } else {
+                        when (val status = updateStatus) {
+                            is UpdateStatus.Available -> context.getString(R.string.new_version, appVersion, status.newVersion)
+                            is UpdateStatus.PatchAvailable -> context.getString(R.string.new_version, appVersion, status.newVersion)
+                            is UpdateStatus.UpToDate -> context.getString(R.string.already_latest_version, appVersion)
+                            is UpdateStatus.Error -> status.message
+                            is UpdateStatus.Checking -> context.getString(R.string.checking_updates)
+                            else -> null
+                        }
+                    }
 
                 SettingsGroup {
                     SettingsRow(
@@ -903,48 +910,60 @@ fun AboutScreen(
                         iconTint = MaterialTheme.colorScheme.primary,
                         title = stringResource(id = R.string.check_for_updates),
                         subtitleText = updateSubtitle,
-                        trailing = {
-                            if (updateStatus is UpdateStatus.Checking) {
-                                CircularProgressIndicator(
-                                    strokeWidth = 2.dp,
-                                    modifier = Modifier.size(18.dp)
-                                )
-                            } else {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                        },
-                        onClick = {
-                            when (updateStatus) {
-                                is UpdateStatus.Available,
-                                is UpdateStatus.PatchAvailable,
-                                is UpdateStatus.UpToDate,
-                                is UpdateStatus.Error -> showUpdateDialog = true
-                                is UpdateStatus.Checking -> Unit
-                                else -> checkForUpdates()
-                            }
-                        }
-                    )
-
-                    HorizontalDivider(modifier = Modifier.padding(start = 66.dp))
-
-                    SettingsRow(
-                        icon = Icons.Default.NewReleases,
-                        iconTint = MaterialTheme.colorScheme.tertiary,
-                        title = stringResource(id = R.string.beta_plan),
-                        subtitleText = stringResource(id = R.string.beta_plan_desc),
-                        trailing = {
-                            Switch(
-                                checked = betaEnabled,
-                                onCheckedChange = { enabled ->
-                                    scope.launch { preferences.saveBetaPlanEnabled(enabled) }
+                        trailing =
+                            if (BuildConfig.UPDATE_CHECK_ENABLED) {
+                                {
+                                    if (updateStatus is UpdateStatus.Checking) {
+                                        CircularProgressIndicator(
+                                            strokeWidth = 2.dp,
+                                            modifier = Modifier.size(18.dp)
+                                        )
+                                    } else {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
                                 }
-                            )
-                        }
+                            } else {
+                                null
+                            },
+                        onClick =
+                            if (BuildConfig.UPDATE_CHECK_ENABLED) {
+                                {
+                                    when (updateStatus) {
+                                        is UpdateStatus.Available,
+                                        is UpdateStatus.PatchAvailable,
+                                        is UpdateStatus.UpToDate,
+                                        is UpdateStatus.Error -> showUpdateDialog = true
+                                        is UpdateStatus.Checking -> Unit
+                                        else -> checkForUpdates()
+                                    }
+                                }
+                            } else {
+                                null
+                            }
                     )
+
+                    if (BuildConfig.UPDATE_CHECK_ENABLED) {
+                        HorizontalDivider(modifier = Modifier.padding(start = 66.dp))
+
+                        SettingsRow(
+                            icon = Icons.Default.NewReleases,
+                            iconTint = MaterialTheme.colorScheme.tertiary,
+                            title = stringResource(id = R.string.beta_plan),
+                            subtitleText = stringResource(id = R.string.beta_plan_desc),
+                            trailing = {
+                                Switch(
+                                    checked = betaEnabled,
+                                    onCheckedChange = { enabled ->
+                                        scope.launch { preferences.saveBetaPlanEnabled(enabled) }
+                                    }
+                                )
+                            }
+                        )
+                    }
                 }
             }
 
@@ -977,14 +996,16 @@ fun AboutScreen(
                         }
                     )
 
-                    HorizontalDivider(modifier = Modifier.padding(start = 66.dp))
+                    if (BuildConfig.UPDATE_CHECK_ENABLED) {
+                        HorizontalDivider(modifier = Modifier.padding(start = 66.dp))
 
-                    SettingsRow(
-                        icon = Icons.Default.History,
-                        iconTint = MaterialTheme.colorScheme.secondary,
-                        title = stringResource(R.string.update_log),
-                        onClick = { navigateToUpdateHistory() }
-                    )
+                        SettingsRow(
+                            icon = Icons.Default.History,
+                            iconTint = MaterialTheme.colorScheme.secondary,
+                            title = stringResource(R.string.update_log),
+                            onClick = { navigateToUpdateHistory() }
+                        )
+                    }
 
                     HorizontalDivider(modifier = Modifier.padding(start = 66.dp))
 

@@ -22,6 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.Lifecycle
 import com.ai.assistance.operit.core.application.ForegroundServiceCompat
+import com.ai.assistance.operit.core.application.AppIntentActions
 import com.ai.assistance.operit.core.application.OperitApplication
 import com.ai.assistance.operit.R
 import com.ai.assistance.operit.api.chat.AIForegroundService
@@ -99,10 +100,10 @@ class FloatingChatService : Service(), FloatingWindowCallback {
         @Volatile
         private var instance: FloatingChatService? = null
 
-        const val ACTION_FLOATING_CHAT_SERVICE_STARTED = "com.ai.assistance.operit.action.FLOATING_CHAT_SERVICE_STARTED"
-        const val ACTION_FLOATING_CHAT_SERVICE_STOPPED = "com.ai.assistance.operit.action.FLOATING_CHAT_SERVICE_STOPPED"
-        const val ACTION_FLOATING_CHAT_WINDOW_SHOWN = "com.ai.assistance.operit.action.FLOATING_CHAT_WINDOW_SHOWN"
-        const val ACTION_FLOATING_CHAT_WINDOW_SHOW_FAILED = "com.ai.assistance.operit.action.FLOATING_CHAT_WINDOW_SHOW_FAILED"
+        val ACTION_FLOATING_CHAT_SERVICE_STARTED = AppIntentActions.floatingChatServiceStarted
+        val ACTION_FLOATING_CHAT_SERVICE_STOPPED = AppIntentActions.floatingChatServiceStopped
+        val ACTION_FLOATING_CHAT_WINDOW_SHOWN = AppIntentActions.floatingChatWindowShown
+        val ACTION_FLOATING_CHAT_WINDOW_SHOW_FAILED = AppIntentActions.floatingChatWindowShowFailed
 
         const val EXTRA_AUTO_ENTER_VOICE_CHAT = "AUTO_ENTER_VOICE_CHAT"
         const val EXTRA_WAKE_LAUNCHED = "WAKE_LAUNCHED"

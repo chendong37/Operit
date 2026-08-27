@@ -2,7 +2,6 @@ package com.ai.assistance.operit.ui.features.chat.webview
 
 import android.content.Context
 import com.ai.assistance.operit.R
-import com.ai.assistance.operit.util.OperitPaths
 import java.io.File
 import java.io.IOException
 
@@ -72,20 +71,9 @@ fun createAndGetDefaultWorkspace(context: Context, chatId: String, projectType: 
     return webContentDir
 }
 
-/**
- * 获取工作区路径（新位置：内部存储）
- * 路径: /data/data/com.ai.assistance.operit/files/workspace/{chatId}
- */
+/** 获取当前安装实例的内部工作区路径。 */
 fun getWorkspacePath(context: Context, chatId: String): String {
     return File(context.filesDir, "workspace/$chatId").absolutePath
-}
-
-/**
- * 获取旧的工作区路径（外部存储）
- * 路径: /sdcard/Download/Operit/workspace/{chatId}
- */
-fun getLegacyWorkspacePath(chatId: String): String {
-    return OperitPaths.workspacePathSdcard(chatId)
 }
 
 fun ensureWorkspaceDirExists(path: String): File {
@@ -311,12 +299,12 @@ private fun generateWebProjectConfig(context: Context): String {
     "description": "${context.getString(R.string.workspace_project_web_description)}",
     "server": {
         "enabled": true,
-        "port": 8093,
+        "port": ${com.ai.assistance.operit.BuildConfig.WORKSPACE_PORT},
         "autoStart": true
     },
     "preview": {
         "type": "browser",
-        "url": "http://localhost:8093"
+        "url": "http://localhost:${com.ai.assistance.operit.BuildConfig.WORKSPACE_PORT}"
     },
     "commands": [],
     "export": {

@@ -65,6 +65,7 @@ import androidx.lifecycle.ViewModel
 import com.ai.assistance.operit.R
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ai.assistance.operit.BuildConfig
 
 // ViewModel factory helper
 inline fun <VM : ViewModel> viewModelFactory(crossinline f: () -> VM) =
@@ -75,6 +76,17 @@ inline fun <VM : ViewModel> viewModelFactory(crossinline f: () -> VM) =
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdateScreen(onNavigateToThemeSettings: () -> Unit) {
+    if (!BuildConfig.UPDATE_CHECK_ENABLED) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text(
+                text = stringResource(R.string.internal_update_distribution),
+                style = MaterialTheme.typography.bodyLarge,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(24.dp),
+            )
+        }
+        return
+    }
     val context = LocalContext.current
     val viewModel: UpdateViewModel = viewModel(factory = viewModelFactory {
         UpdateViewModel(context.applicationContext)

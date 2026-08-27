@@ -1,6 +1,7 @@
 'use strict';
 
 const File = Java.type('java.io.File');
+const BuildConfig = Java.type('com.ai.assistance.operit.BuildConfig');
 
 function ensureDir(path) {
   const dir = new File(String(path));
@@ -142,7 +143,8 @@ const DOWNLOADS = [
   })
 );
 
-const rootDir = '/sdcard/Download/Operit/js_test_download_stress_' + Date.now();
+const rootDir =
+  '/sdcard/Download/' + String(BuildConfig.PUBLIC_STORAGE_ROOT) + '/js_test_download_stress_' + Date.now();
 ensureDir(rootDir);
 
 const startedAt = Date.now();

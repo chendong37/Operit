@@ -53,14 +53,18 @@ class ActionListenerFactory {
             context: Context
         ): Pair<ActionListener, ActionListener.PermissionStatus> {
 
-            // 按权限从高到低尝试
-            val levels = listOf(
-                AndroidPermissionLevel.ROOT,
-                AndroidPermissionLevel.ADMIN,
-                AndroidPermissionLevel.DEBUGGER,
-                AndroidPermissionLevel.ACCESSIBILITY,
-                AndroidPermissionLevel.STANDARD
-            )
+            // Root 不是自动候选。只有用户已经把首选档位明确设为 ROOT，才允许探测它；
+            // 否则“最高可用”也必须停留在非 Root 能力范围内。
+            val rootExplicitlySelected =
+                androidPermissionPreferences.getPreferredPermissionLevel() ==
+                    AndroidPermissionLevel.ROOT
+            val levels = buildList {
+                if (rootExplicitlySelected) add(AndroidPermissionLevel.ROOT)
+                add(AndroidPermissionLevel.ADMIN)
+                add(AndroidPermissionLevel.DEBUGGER)
+                add(AndroidPermissionLevel.ACCESSIBILITY)
+                add(AndroidPermissionLevel.STANDARD)
+            }
 
             for (level in levels) {
                 val listener = getListener(context, level)
@@ -158,4 +162,4 @@ class ActionListenerFactory {
             return allStopped
         }
     }
-} 
+}

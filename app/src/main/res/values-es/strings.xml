@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Operit AI</string>
+    <string name="app_name">Zhixing AI</string>
     <string name="accessibility_service_description">Se utiliza para obtener la jerarquía de la interfaz de usuario, proporcionando al asistente de IA capacidades de análisis de interfaz más rápidas. No recopilará ni almacenará ninguna información personal.</string>
 
     <!-- Navigation -->
@@ -237,7 +237,7 @@
     <string name="copy_path">Copiar ruta</string>
     <string name="path_copied_to_clipboard">Ruta copiada al portapapeles</string>
     <string name="open_file_manager">Abrir gestor de archivos</string>
-    <string name="navigate_to_external_files">Navegue a Android/data/com.ai.assistance.operit/files/packages</string>
+    <string name="navigate_to_external_files">Navegue al directorio files/packages de la aplicación actual dentro de Android/data</string>
 
     <!-- OperScript Execution -->
     <string name="run_script">Ejecutar script</string>
@@ -3962,9 +3962,9 @@ Ahora puede usar el modo AutoGLM en la interfaz de conversación.</string>
     <string name="import_color_qr">Importar código QR de color</string>
     <string name="scan_color_qr">Escanear código QR de color</string>
     <string name="tavern_json">JSON de Tavern</string>
-    <string name="export_tavern_json_desc">Exportar como .json y guardar en Download/Operit/exports</string>
+    <string name="export_tavern_json_desc">Exportar como .json y guardar en Download/ZhixingAI/exports</string>
     <string name="tavern_png">PNG de Tavern</string>
-    <string name="export_tavern_png_desc">Exportar como imagen importable a Tavern y guardar en Download/Operit/exports</string>
+    <string name="export_tavern_png_desc">Exportar como imagen importable a Tavern y guardar en Download/ZhixingAI/exports</string>
     <string name="image_read_error">No se puede leer la imagen</string>
     <string name="image_parse_error">No se puede analizar la imagen</string>
     <string name="color_qr_not_recognized">No se puede reconocer el código QR de color</string>
@@ -4793,7 +4793,7 @@ Ahora puede usar el modo AutoGLM en la interfaz de conversación.</string>
     <string name="external_http_chat_enable">Habilitar servicio HTTP externo</string>
     <string name="external_http_chat_enable_desc">Al activarlo, se iniciará un servicio HTTP externo que escucha en 0.0.0.0; el mismo puerto proporciona tanto la API HTTP como una interfaz de chat web accesible directamente</string>
     <string name="external_http_chat_port">Puerto de escucha</string>
-    <string name="external_http_chat_port_desc">Por defecto 8094. El servicio escuchará en 0.0.0.0:puerto; al guardar, el servicio se reiniciará automáticamente si está habilitado</string>
+    <string name="external_http_chat_port_desc">Por defecto 18094. El servicio escuchará en 0.0.0.0:puerto; al guardar, el servicio se reiniciará automáticamente si está habilitado</string>
     <string name="external_http_chat_save_port">Guardar puerto</string>
     <string name="external_http_chat_port_saved">Puerto guardado</string>
     <string name="external_http_chat_invalid_port">Puerto no válido, introduzca un valor entre 1 y 65535</string>
@@ -4957,7 +4957,7 @@ Ahora puede usar el modo AutoGLM en la interfaz de conversación.</string>
     <string name="backup_room_db_restart_later">Más tarde</string>
     <string name="backup_room_db_last_success">Último respaldo exitoso: %1$s</string>
     <string name="backup_room_db_last_error">Último error: %1$s</string>
-    <string name="backup_files_location_hint">Sugerencia: los archivos de respaldo se guardan en la carpeta Download/Operit</string>
+    <string name="backup_files_location_hint">Sugerencia: los archivos de respaldo se guardan en la carpeta Download/ZhixingAI</string>
     <string name="backup_raw_snapshot_title">Respaldo de instantánea de archivos (experimental)</string>
     <string name="backup_raw_snapshot_subtitle">Respaldo y restauración comprimidos completos por archivo/directorio</string>
     <string name="backup_raw_snapshot_desc">Empaqueta los directorios files/shared_prefs/datastore/databases del directorio de datos internos de la aplicación (el entorno Linux de terminal es grande, no se respalda por defecto). La restauración sobrescribirá los datos actuales y requerirá reiniciar la aplicación para que surta efecto. Algunos datos cifrados pueden no funcionar después de cambiar de dispositivo o reinstalar.</string>
@@ -7316,11 +7316,11 @@ Ahora puede usar el modo AutoGLM en la interfaz de conversación.</string>
     <string name="artifact_project_node_selection_hint">Haz clic para seleccionar un nodo; vuelve a hacer clic para deseleccionarlo.</string>
     <string name="plugin_creation_fresh_task_line">Activa el editor Operit y usa el kit de desarrollo sandbox para desarrollar un nuevo kit sandbox.</string>
     <string name="plugin_creation_fresh_package_rule_line">Primero determina el ID del nuevo kit sandbox; no lo renombres después.</string>
-    <string name="plugin_creation_fresh_dev_directory_line">El directorio de desarrollo se fija en Descargas/Operit/dev_package/el ID que determinaste. El desarrollo, la instalación y las pruebas se realizan solo aquí.</string>
+    <string name="plugin_creation_fresh_dev_directory_line">El directorio de desarrollo se fija en Descargas/ZhixingAI/dev_package/el ID que determinaste. El desarrollo, la instalación y las pruebas se realizan solo aquí.</string>
     <string name="plugin_creation_continue_task_line">Activa el editor Operit, busca la ubicación del kit sandbox %1$s y continúa desarrollando y probando sobre esta versión.</string>
     <string name="plugin_creation_merge_task_line">Activa el editor Operit, busca la ubicación del kit sandbox %1$s y realiza desarrollo de fusión y pruebas sobre esta versión.</string>
     <string name="plugin_creation_existing_package_rule_line">El ID actual del kit sandbox es %1$s. Tanto el ID del kit como el nombre del plugin deben mantenerse; no los renombres ni crees un nuevo kit.</string>
-    <string name="plugin_creation_existing_dev_directory_line">El directorio de desarrollo se fija en Descargas/Operit/dev_package/%1$s. El desarrollo, la instalación y las pruebas se realizan solo aquí.</string>
+    <string name="plugin_creation_existing_dev_directory_line">El directorio de desarrollo se fija en Descargas/ZhixingAI/dev_package/%1$s. El desarrollo, la instalación y las pruebas se realizan solo aquí.</string>
     <string name="plugin_creation_update_sandbox_package_dev">Primero actualiza SandboxPackage_DEV.</string>
     <string name="plugin_creation_copy_types_to_dev_dir">Copia los types de skills al directorio de desarrollo sobrescribiendo.</string>
     <string name="plugin_creation_use_terminal_ts_js_hint">Usa la terminal tanto como sea posible; prioriza escribir ts y js, luego compila al js final. Consulta los ejemplos para tsconfig.</string>

@@ -1,0 +1,35 @@
+{
+  "schema": "operit_team_assistant_bundle_v1",
+  "version": "0.2.0",
+  "productName": "知行 AI",
+  "workingName": "知行 AI",
+  "audience": "internal-team",
+  "targetOs": "xiaomi-hyperos",
+  "modelProfile": {
+    "provider": "DeepSeek",
+    "chatCompletionsEndpoint": "https://api.deepseek.com/v1/chat/completions",
+    "recommendedModel": "deepseek-v4-flash",
+    "credentialsIncluded": false
+  },
+  "installationGuide": "INSTALL.md",
+  "deviceSetupGuide": "HYPEROS_SETUP.md",
+  "characterCards": "character_cards_backup.json",
+  "brandingMaster": "branding/zhixing_ai_mark.png",
+  "skills": [
+    "skills/team-constitution.zip",
+    "skills/task-router.zip",
+    "skills/safe-execution.zip",
+    "skills/memory-policy.zip",
+    "skills/evidence-gate.zip"
+  ],
+  "baselinePermissionProfile": "standard-accessibility",
+  "optionalPermissionProfiles": [
+    "shizuku"
+  ],
+  "permissionProfiles": [
+    "standard-accessibility",
+    "shizuku"
+  ],
+  "rootPolicy": "not-required-not-configured",
+  "characterToolAccessPolicy": "follow-global-least-privilege"
+}

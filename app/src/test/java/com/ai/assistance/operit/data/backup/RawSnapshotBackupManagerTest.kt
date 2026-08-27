@@ -7,15 +7,19 @@ import org.junit.Test
 class RawSnapshotBackupManagerTest {
 
     @Test
-    fun snapshotPackageName_acceptsOperitPackagePrefix() {
-        assertTrue(isSupportedSnapshotPackageName("com.ai.assistance.operit"))
-        assertTrue(isSupportedSnapshotPackageName("com.ai.assistance.operit.debug"))
-        assertTrue(isSupportedSnapshotPackageName("com.ai.assistance.operit.clone"))
+    fun snapshotPackageName_acceptsOnlyCurrentApplicationPackage() {
+        assertTrue(
+            isSupportedSnapshotPackageName(
+                packageName = "com.zhixing.ai",
+                expectedPackageName = "com.zhixing.ai",
+            )
+        )
     }
 
     @Test
-    fun snapshotPackageName_rejectsDifferentPackagePrefix() {
-        assertFalse(isSupportedSnapshotPackageName("com.ai.assistance.other"))
-        assertFalse(isSupportedSnapshotPackageName("com.example.operit"))
+    fun snapshotPackageName_rejectsOtherVariantsAndUpstreamPackage() {
+        assertFalse(isSupportedSnapshotPackageName("com.zhixing.ai.internal", "com.zhixing.ai"))
+        assertFalse(isSupportedSnapshotPackageName("com.zhixing.ai.debug", "com.zhixing.ai"))
+        assertFalse(isSupportedSnapshotPackageName("com.ai.assistance.operit", "com.zhixing.ai"))
     }
 }

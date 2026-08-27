@@ -158,7 +158,7 @@ const fileConverter = (function () {
      */
     async function main() {
         console.log("--- Starting File Converter Tool Test ---");
-        const testDir = "/sdcard/Download/converter_test";
+        const testDir = `${getPluginConfigDir("file_converter")}/converter_test`;
         await Tools.Files.mkdir(testDir, true);
         // Test 1: Image conversion (PNG to JPG)
         try {

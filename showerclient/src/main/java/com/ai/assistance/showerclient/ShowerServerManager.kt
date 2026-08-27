@@ -1,6 +1,7 @@
 package com.ai.assistance.showerclient
 
 import android.content.Context
+import android.os.Environment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -24,6 +25,38 @@ object ShowerServerManager {
     @Volatile
     var additionalTargetPackages: Set<String> = emptySet()
 
+    private data class ServerInstance(
+        val packageName: String,
+        val token: String,
+    ) {
+        val remoteJarPath = "/data/local/tmp/shower-server-$token.jar"
+        val remoteLogPath = "/data/local/tmp/shower-$token.log"
+        val remotePidPath = "/data/local/tmp/shower-$token.pid"
+    }
+
+    private fun serverInstance(context: Context): ServerInstance {
+        val packageName = context.applicationContext.packageName
+        require(packageName.matches(Regex("[A-Za-z0-9_.]+"))) {
+            "Unsupported application id for Shower server: $packageName"
+        }
+        return ServerInstance(
+            packageName = packageName,
+            token = packageName.replace('.', '-'),
+        )
+    }
+
+    private fun stopCommand(instance: ServerInstance): String {
+        val pid = "${'$'}pid"
+        val cmdline = "${'$'}cmdline"
+        return "pid=${'$'}(cat ${instance.remotePidPath} 2>/dev/null || true); " +
+            "case \"$pid\" in ''|*[!0-9]*) ;; *) " +
+            "if [ -r /proc/$pid/cmdline ]; then " +
+            "cmdline=${'$'}(tr '\\000' ' ' < /proc/$pid/cmdline); " +
+            "case \"$cmdline\" in " +
+            "*\"com.ai.assistance.shower.Main ${instance.packageName} ${instance.remoteLogPath}\"*) " +
+            "kill \"$pid\" ;; esac; fi ;; esac; rm -f ${instance.remotePidPath}"
+    }
+
     /**
      * Ensure the Shower server is started in the background.
      * Returns true if the start command was issued successfully and a Binder
@@ -43,6 +76,7 @@ object ShowerServerManager {
         }
 
         val appContext = context.applicationContext
+        val instance = serverInstance(appContext)
         val jarFile = try {
             copyJarToExternalDir(appContext)
         } catch (e: Exception) {
@@ -51,14 +85,13 @@ object ShowerServerManager {
         }
 
         // 1) Kill existing server (ignore errors about missing process).
-        val killCmd = "pkill -f com.ai.assistance.shower.Main || true"
+        val killCmd = stopCommand(instance)
         ShowerLog.d(TAG, "Stopping existing Shower server (if any) with command: $killCmd")
         runner.run(killCmd, ShellIdentity.DEFAULT)
 
         // 2) With highest available identity, remove any stale jar and log under /data/local/tmp.
-        val remoteJarPath = "/data/local/tmp/$LOCAL_JAR_NAME"
-        val remoteLogPath = "/data/local/tmp/shower.log"
-        val cleanupCmd = "rm -f $remoteJarPath $remoteLogPath || true"
+        val remoteJarPath = instance.remoteJarPath
+        val cleanupCmd = "rm -f $remoteJarPath ${instance.remoteLogPath} || true"
         ShowerLog.d(TAG, "Cleaning up previous Shower jar and log with command: $cleanupCmd")
         val cleanupResult = runner.run(cleanupCmd, ShellIdentity.DEFAULT)
         if (!cleanupResult.success) {
@@ -68,7 +101,8 @@ object ShowerServerManager {
             )
         }
 
-        // 3) Copy the jar from /sdcard/Download/Operit to /data/local/tmp using shell identity,
+        // 3) Copy the jar from this host package's isolated Downloads staging directory to
+        // /data/local/tmp using shell identity,
         // so that the resulting file is owned by the shell user.
         val copyCmd = "cp ${jarFile.absolutePath} $remoteJarPath"
         ShowerLog.d(TAG, "Copying Shower jar with shell identity using command: $copyCmd")
@@ -83,7 +117,10 @@ object ShowerServerManager {
 
         // 4) Start app_process with CLASSPATH pointing to /data/local/tmp/shower-server.jar, in background.
         val targetPackagesArg = appContext.packageName
-        val startCmd = "CLASSPATH=$remoteJarPath app_process / com.ai.assistance.shower.Main $targetPackagesArg &"
+        val startCmd =
+            "CLASSPATH=$remoteJarPath app_process / com.ai.assistance.shower.Main " +
+                "$targetPackagesArg ${instance.remoteLogPath} >/dev/null 2>&1 & " +
+                "echo ${'$'}! > ${instance.remotePidPath}"
         ShowerLog.d(TAG, "Starting Shower server with command: $startCmd")
         val startResult = runner.run(startCmd, ShellIdentity.SHELL)
         if (!startResult.success) {
@@ -113,13 +150,13 @@ object ShowerServerManager {
     /**
      * Stop the Shower server process if running.
      */
-    suspend fun stopServer(): Boolean {
+    suspend fun stopServer(context: Context): Boolean {
         val runner = ShowerEnvironment.shellRunner
         if (runner == null) {
             ShowerLog.e(TAG, "No ShellRunner configured in ShowerEnvironment; cannot stop server")
             return false
         }
-        val cmd = "pkill -f com.ai.assistance.shower.Main || true"
+        val cmd = stopCommand(serverInstance(context))
         val result = runner.run(cmd, ShellIdentity.DEFAULT)
         if (!result.success) {
             ShowerLog.e(TAG, "Failed to stop Shower server: ${result.stderr}")
@@ -133,8 +170,10 @@ object ShowerServerManager {
      * around [ShellRunner] if needed.
      */
     private suspend fun copyJarToExternalDir(context: Context): File = withContext(Dispatchers.IO) {
-        // Reuse the same base directory as screenshots: /sdcard/Download/Operit
-        val baseDir = File("/sdcard/Download/Operit")
+        val baseDir = File(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+            context.packageName,
+        )
         if (!baseDir.exists()) {
             baseDir.mkdirs()
         }

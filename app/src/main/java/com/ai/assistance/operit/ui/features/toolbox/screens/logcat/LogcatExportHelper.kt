@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import com.ai.assistance.operit.BuildConfig
 import com.ai.assistance.operit.R
 import com.ai.assistance.operit.util.AppLogger
 import java.io.File
@@ -42,7 +43,7 @@ object LogcatExportHelper {
             }
 
             val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-            val fileName = "operit_log_$timestamp.txt"
+            val fileName = "zhixing_ai_log_$timestamp.txt"
             val filePath = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 saveUsingMediaStore(context, fileName, logFile, logLineCount)
             } else {
@@ -109,7 +110,10 @@ object LogcatExportHelper {
             val contentValues = ContentValues().apply {
                 put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
                 put(MediaStore.MediaColumns.MIME_TYPE, "text/plain")
-                put(MediaStore.MediaColumns.RELATIVE_PATH, "${Environment.DIRECTORY_DOWNLOADS}/operit")
+                put(
+                    MediaStore.MediaColumns.RELATIVE_PATH,
+                    "${Environment.DIRECTORY_DOWNLOADS}/${BuildConfig.PUBLIC_STORAGE_ROOT}",
+                )
             }
             val uri = context.contentResolver.insert(
                 MediaStore.Downloads.EXTERNAL_CONTENT_URI,
@@ -124,7 +128,7 @@ object LogcatExportHelper {
 
             val downloadsDir =
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-            return "${downloadsDir.absolutePath}/operit/$fileName"
+            return "${downloadsDir.absolutePath}/${BuildConfig.PUBLIC_STORAGE_ROOT}/$fileName"
         } catch (e: Exception) {
             throw Exception(context.getString(R.string.logcat_mediestore_save_failed, e.message ?: ""))
         }
@@ -142,7 +146,7 @@ object LogcatExportHelper {
             if (downloadsDir == null || !downloadsDir.exists() && !downloadsDir.mkdirs()) {
                 throw Exception(context.getString(R.string.logcat_cannot_create_download_dir))
             }
-            val operitDir = File(downloadsDir, "operit")
+            val operitDir = File(downloadsDir, BuildConfig.PUBLIC_STORAGE_ROOT)
             if (!operitDir.exists() && !operitDir.mkdirs()) {
                 throw Exception(context.getString(R.string.logcat_cannot_create_operit_dir))
             }

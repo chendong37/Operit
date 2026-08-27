@@ -45,6 +45,7 @@ import android.media.MediaScannerConnection
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import com.ai.assistance.operit.BuildConfig
 import android.widget.Toast
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -558,7 +559,7 @@ fun ModelPromptsSettingsScreen(
                     mimeType = "application/json"
                 )
                 if (ok) {
-                    exportSavedPath = "${Environment.DIRECTORY_DOWNLOADS}/Operit/exports/$fileName"
+                    exportSavedPath = "${Environment.DIRECTORY_DOWNLOADS}/${BuildConfig.PUBLIC_STORAGE_ROOT}/exports/$fileName"
                     showExportSavedDialog = true
                 } else {
                     Toast.makeText(context, context.getString(R.string.save_failed), Toast.LENGTH_SHORT).show()
@@ -1621,7 +1622,7 @@ fun ModelPromptsSettingsScreen(
                                             mimeType = "application/json"
                                         )
                                         if (ok) {
-                                            exportSavedPath = "${Environment.DIRECTORY_DOWNLOADS}/Operit/exports/$fileName"
+                                            exportSavedPath = "${Environment.DIRECTORY_DOWNLOADS}/${BuildConfig.PUBLIC_STORAGE_ROOT}/exports/$fileName"
                                             showExportSavedDialog = true
                                         } else {
                                             Toast.makeText(context, context.getString(R.string.save_failed), Toast.LENGTH_SHORT).show()
@@ -1693,7 +1694,7 @@ fun ModelPromptsSettingsScreen(
                                             mimeType = "image/png"
                                         )
                                         if (ok) {
-                                            exportSavedPath = "${Environment.DIRECTORY_DOWNLOADS}/Operit/exports/$fileName"
+                                            exportSavedPath = "${Environment.DIRECTORY_DOWNLOADS}/${BuildConfig.PUBLIC_STORAGE_ROOT}/exports/$fileName"
                                             showExportSavedDialog = true
                                         } else {
                                             Toast.makeText(context, context.getString(R.string.save_failed), Toast.LENGTH_SHORT).show()
@@ -3391,7 +3392,7 @@ private suspend fun saveBitmapToGallery(context: Context, bitmap: Bitmap, fileNa
                     put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
                     put(
                         MediaStore.MediaColumns.RELATIVE_PATH,
-                        "${Environment.DIRECTORY_PICTURES}/Operit"
+                        "${Environment.DIRECTORY_PICTURES}/${BuildConfig.PUBLIC_STORAGE_ROOT}"
                     )
                 }
 
@@ -3409,7 +3410,7 @@ private suspend fun saveBitmapToGallery(context: Context, bitmap: Bitmap, fileNa
                 return@withContext false
             } else {
                 val imagesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                val targetDir = File(imagesDir, "Operit").apply { if (!exists()) mkdirs() }
+                val targetDir = File(imagesDir, BuildConfig.PUBLIC_STORAGE_ROOT).apply { if (!exists()) mkdirs() }
                 val imageFile = File(targetDir, fileName)
                 FileOutputStream(imageFile).use { outputStream ->
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
@@ -3436,7 +3437,7 @@ private suspend fun saveBytesToDownloads(context: Context, bytes: ByteArray, fil
                     put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
                     put(
                         MediaStore.MediaColumns.RELATIVE_PATH,
-                        "${Environment.DIRECTORY_DOWNLOADS}/Operit/exports"
+                        "${Environment.DIRECTORY_DOWNLOADS}/${BuildConfig.PUBLIC_STORAGE_ROOT}/exports"
                     )
                 }
 
@@ -3455,7 +3456,10 @@ private suspend fun saveBytesToDownloads(context: Context, bytes: ByteArray, fil
                 return@withContext false
             } else {
                 val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                val targetDir = File(downloadsDir, "Operit/exports").apply { if (!exists()) mkdirs() }
+                val targetDir = File(
+                    downloadsDir,
+                    "${BuildConfig.PUBLIC_STORAGE_ROOT}/exports",
+                ).apply { if (!exists()) mkdirs() }
                 val outFile = File(targetDir, fileName)
                 FileOutputStream(outFile).use { outputStream ->
                     outputStream.write(bytes)

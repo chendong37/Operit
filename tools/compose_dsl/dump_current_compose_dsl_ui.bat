@@ -39,35 +39,31 @@ if %DEVICE_COUNT% equ 1 (
     for %%i in (!CHOICE!) do set "DEVICE_SERIAL=!DEVICE_%%i!"
 )
 
-REM Resolve the installed Debug or Release application package.
+REM Resolve the runtime applicationId; override with OPERIT_APP_PACKAGE when needed.
 set "APP_ID=%OPERIT_APP_PACKAGE%"
-if defined APP_ID (
-    if /I not "!APP_ID!"=="com.ai.assistance.operit.debug" if /I not "!APP_ID!"=="com.ai.assistance.operit" (
-        echo Error: Unsupported Operit application package - !APP_ID!
-        exit /b 1
-    )
-    adb -s "!DEVICE_SERIAL!" shell pm list packages "!APP_ID!" | findstr /x /c:"package:!APP_ID!" >nul
-    if errorlevel 1 (
-        echo Error: Operit application package is not installed - !APP_ID!
-        exit /b 1
-    )
-) else (
-    set "APP_ID="
-    for %%P in (com.ai.assistance.operit.debug com.ai.assistance.operit) do (
-        if not defined APP_ID (
-            adb -s "!DEVICE_SERIAL!" shell pm list packages "%%P" | findstr /x /c:"package:%%P" >nul
-            if not errorlevel 1 set "APP_ID=%%P"
-        )
-    )
-    if not defined APP_ID (
-        echo Error: Neither supported Operit application package is installed
-        exit /b 1
-    )
+if not defined APP_ID set "APP_ID=com.zhixing.ai"
+echo(!APP_ID!| findstr /r /x "[A-Za-z][A-Za-z0-9_]*\.[A-Za-z][A-Za-z0-9_.]*" >nul
+if errorlevel 1 (
+    echo Error: Invalid Android applicationId - !APP_ID!
+    exit /b 1
+)
+if not "!APP_ID:..=!"=="!APP_ID!" (
+    echo Error: Invalid Android applicationId - !APP_ID!
+    exit /b 1
+)
+if "!APP_ID:~-1!"=="." (
+    echo Error: Invalid Android applicationId - !APP_ID!
+    exit /b 1
+)
+adb -s "!DEVICE_SERIAL!" shell pm list packages "!APP_ID!" | findstr /x /c:"package:!APP_ID!" >nul
+if errorlevel 1 (
+    echo Error: Application package is not installed - !APP_ID!
+    exit /b 1
 )
 set "ACTION=!APP_ID!.DUMP_COMPOSE_DSL_UI"
-set "RECEIVER=!APP_ID!/.core.tools.packTool.ToolPkgComposeDslDebugDumpReceiver"
+set "RECEIVER=!APP_ID!/com.ai.assistance.operit.core.tools.packTool.ToolPkgComposeDslDebugDumpReceiver"
 set "REMOTE_DIR=/sdcard/Android/data/!APP_ID!/files/debug/compose_dsl_dump/current"
-echo Using Operit application package: !APP_ID!
+echo Using application package: !APP_ID!
 
 for /f %%i in ('powershell -NoProfile -Command "(Get-Date).ToString('yyyyMMdd-HHmmss')"') do set "TIMESTAMP=%%i"
 if not exist "%LOCAL_ROOT%" mkdir "%LOCAL_ROOT%"

@@ -106,7 +106,7 @@ class ExternalHttpApiPreferences private constructor(private val context: Contex
     }
 
     companion object {
-        const val DEFAULT_PORT = 8094
+        val DEFAULT_PORT = com.ai.assistance.operit.BuildConfig.EXTERNAL_HTTP_DEFAULT_PORT
 
         private val KEY_ENABLED = booleanPreferencesKey("external_http_api_enabled")
         private val KEY_PORT = intPreferencesKey("external_http_api_port")

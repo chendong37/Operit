@@ -271,8 +271,9 @@ class UIDebuggerViewModel : ViewModel() {
                     currentActionListener = null
                 }
 
-                AppLogger.d(TAG, "获取最高权限的监听器...")
-                val (listener, status) = ActionListenerFactory.getHighestAvailableListener(context)
+                // 严格使用用户已选择的权限档位，避免在无障碍基线下探测或触发 Root。
+                val listener = ActionListenerFactory.getUserPreferredListener(context)
+                val status = listener.hasPermission()
                 AppLogger.d(TAG, "获取到监听器类型: ${listener::class.simpleName}, 权限状态: ${status.granted}")
                 
                 if (!status.granted) {

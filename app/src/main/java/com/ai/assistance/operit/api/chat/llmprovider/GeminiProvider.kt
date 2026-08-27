@@ -13,6 +13,7 @@ import com.ai.assistance.operit.data.stats.ProviderUsageNormalizer
 import com.ai.assistance.operit.util.ChatUtils
 import com.ai.assistance.operit.util.ChatMarkupRegex
 import com.ai.assistance.operit.util.HttpLogSanitizer
+import com.ai.assistance.operit.util.OperitPaths
 import com.ai.assistance.operit.util.StreamingJsonXmlConverter
 import com.ai.assistance.operit.util.TokenCacheManager
 import com.ai.assistance.operit.util.exceptions.UserCancellationException
@@ -25,7 +26,6 @@ import com.ai.assistance.operit.util.stream.withEventChannel
 import com.ai.assistance.operit.util.stream.stream
 import android.content.Context
 import android.net.Uri
-import android.os.Environment
 import android.util.Base64
 import com.ai.assistance.operit.R
 import java.io.File
@@ -969,8 +969,7 @@ open class GeminiProvider(
     }
 
      private fun getOutputImagesDir(): File {
-         val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-         return File(downloadsDir, "Operit/output images")
+         return OperitPaths.outputImagesDir()
      }
 
      private fun fileExtensionForImageMime(mimeType: String): String {

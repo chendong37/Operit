@@ -270,7 +270,7 @@ declare global {
     // Get environment variable function
     function getEnv(key: string): string | undefined;
 
-    // Get persistent plugin config directory under /sdcard/Download/Operit/plugins/<id>
+    // Get the persistent config directory from the current app's managed plugin data root.
     function getPluginConfigDir(pluginId?: string): string;
 
     function getState(): string | undefined;

@@ -5,61 +5,16 @@ const SandboxPackageDevInstallerState = {
 const SandboxPackageDevInstaller = (function () {
   const ENVIRONMENT = "android";
   const SKILL_NAME = "SandboxPackage_DEV";
-  const SKILL_ROOT = `/sdcard/Download/Operit/skills/${SKILL_NAME}`;
+  const OperitPaths = Java.type("com.ai.assistance.operit.util.OperitPaths");
+  const SKILLS_ROOT = String(OperitPaths.INSTANCE.skillsPathSdcard());
+  const SKILL_ROOT = `${SKILLS_ROOT}/${SKILL_NAME}`;
   const REFERENCES_DIR = `${SKILL_ROOT}/references`;
   const TYPES_DIR = `${SKILL_ROOT}/types`;
   const SCRIPTS_DIR = `${SKILL_ROOT}/scripts`;
   const EXAMPLES_DIR = `${SKILL_ROOT}/examples`;
   const EXAMPLE_PACKAGES_DIR = `${EXAMPLES_DIR}/packages`;
   const BUILTIN_PACKAGES_ASSET_DIR = "packages";
-  const CDN_BASE = "https://cdn.jsdelivr.net/gh/AAswordman/Operit@main";
-  const MAX_DOWNLOAD_CONCURRENCY = 8;
-  const TYPE_FILES = [
-    "android.d.ts",
-    "chat.d.ts",
-    "compose-dsl.d.ts",
-    "compose-dsl.material3.generated.d.ts",
-    "core.d.ts",
-    "cryptojs.d.ts",
-    "ffmpeg.d.ts",
-    "files.d.ts",
-    "index.d.ts",
-    "java-bridge.d.ts",
-    "jimp.d.ts",
-    "memory.d.ts",
-    "network.d.ts",
-    "okhttp.d.ts",
-    "pako.d.ts",
-    "quickjs-runtime.d.ts",
-    "results.d.ts",
-    "software_settings.d.ts",
-    "system.d.ts",
-    "tasker.d.ts",
-    "tool-types.d.ts",
-    "toolpkg.d.ts",
-    "ui.d.ts",
-    "workflow.d.ts"
-  ];
-
-  const DOWNLOADS = [
-    {
-      url: `${CDN_BASE}/docs/SCRIPT_DEV_SKILL.md`,
-      destination: `${SKILL_ROOT}/SKILL.md`
-    },
-    {
-      url: `${CDN_BASE}/docs/SCRIPT_DEV_GUIDE.md`,
-      destination: `${REFERENCES_DIR}/SCRIPT_DEV_GUIDE.md`
-    },
-    {
-      url: `${CDN_BASE}/docs/TOOLPKG_FORMAT_GUIDE.md`,
-      destination: `${REFERENCES_DIR}/TOOLPKG_FORMAT_GUIDE.md`
-    }
-  ].concat(
-    TYPE_FILES.map((fileName) => ({
-      url: `${CDN_BASE}/examples/types/${fileName}`,
-      destination: `${TYPES_DIR}/${fileName}`
-    }))
-  );
+  const BUNDLED_DEV_ASSET_DIR = "tools/sandboxpackage_dev";
 
   function logStep(message) {
     SandboxPackageDevInstallerState.logs.push(message);
@@ -68,30 +23,6 @@ const SandboxPackageDevInstaller = (function () {
 
   async function makeDirectory(path) {
     return await Tools.Files.mkdir(path, true, ENVIRONMENT);
-  }
-
-  async function downloadFileAsync(url, destination) {
-    return await Tools.Files.download(url, destination, ENVIRONMENT);
-  }
-
-  async function downloadAllFiles() {
-    let nextIndex = 0;
-
-    async function worker() {
-      while (nextIndex < DOWNLOADS.length) {
-        const item = DOWNLOADS[nextIndex];
-        nextIndex += 1;
-        logStep(`Downloading -> ${item.destination}`);
-        await downloadFileAsync(item.url, item.destination);
-      }
-    }
-
-    const workerCount = Math.min(MAX_DOWNLOAD_CONCURRENCY, DOWNLOADS.length);
-    const workers = [];
-    for (let index = 0; index < workerCount; index += 1) {
-      workers.push(worker());
-    }
-    await Promise.all(workers);
   }
 
   function collectRelativeFiles(directory, relativePrefix, collectedFiles) {
@@ -134,15 +65,43 @@ const SandboxPackageDevInstaller = (function () {
     return copiedFiles;
   }
 
+  function syncBundledDevelopmentFiles() {
+    const File = Java.type("java.io.File");
+    const AssetCopyUtils = Java.type("com.ai.assistance.operit.util.AssetCopyUtils");
+    const context = Java.getApplicationContext();
+    const outputDir = new File(SKILL_ROOT);
+    const copiedFiles = [];
+
+    AssetCopyUtils.INSTANCE.copyAssetDirRecursive(
+      context,
+      BUNDLED_DEV_ASSET_DIR,
+      outputDir,
+      true
+    );
+
+    collectRelativeFiles(outputDir, "", copiedFiles);
+    copiedFiles.sort();
+    if (!copiedFiles.includes("SKILL.md")) {
+      throw new Error("Bundled SandboxPackage_DEV is missing SKILL.md");
+    }
+    if (!copiedFiles.some((path) => path.startsWith("types/") && path.endsWith(".d.ts"))) {
+      throw new Error("Bundled SandboxPackage_DEV is missing TypeScript declarations");
+    }
+    return copiedFiles;
+  }
+
   async function run() {
     logStep(`Preparing skill root -> ${SKILL_ROOT}`);
-    await makeDirectory("/sdcard/Download/Operit/skills");
+    await makeDirectory(SKILLS_ROOT);
     await makeDirectory(SKILL_ROOT);
     await makeDirectory(REFERENCES_DIR);
     await makeDirectory(TYPES_DIR);
     await makeDirectory(SCRIPTS_DIR);
     await makeDirectory(EXAMPLES_DIR);
-    await downloadAllFiles();
+
+    logStep(`Syncing bundled development references -> ${SKILL_ROOT}`);
+    const bundledDevelopmentFiles = syncBundledDevelopmentFiles();
+    logStep(`Bundled development files synced -> ${bundledDevelopmentFiles.length} files`);
 
     logStep(`Syncing built-in package examples -> ${EXAMPLE_PACKAGES_DIR}`);
     const copiedExampleFiles = syncBuiltInPackageExamples();
@@ -159,8 +118,7 @@ const SandboxPackageDevInstaller = (function () {
         scripts_dir: SCRIPTS_DIR,
         examples_dir: EXAMPLES_DIR,
         examples_packages_dir: EXAMPLE_PACKAGES_DIR,
-        downloaded_count: DOWNLOADS.length,
-        type_count: TYPE_FILES.length,
+        bundled_development_file_count: bundledDevelopmentFiles.length,
         builtin_example_count: copiedExampleFiles.length,
         builtin_example_files: copiedExampleFiles,
         logs: SandboxPackageDevInstallerState.logs

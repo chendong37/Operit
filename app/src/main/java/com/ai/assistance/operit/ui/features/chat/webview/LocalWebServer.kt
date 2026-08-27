@@ -1,12 +1,12 @@
 package com.ai.assistance.operit.ui.features.chat.webview
 
 import android.content.Context
-import android.os.Environment
 import android.system.ErrnoException
 import android.system.Os
 import android.system.OsConstants
 import android.util.Base64
 import android.webkit.CookieManager
+import com.ai.assistance.operit.BuildConfig
 import com.ai.assistance.operit.core.tools.AIToolHandler
 import com.ai.assistance.operit.core.tools.BinaryFileContentData
 import com.ai.assistance.operit.core.tools.DirectoryListingData
@@ -14,6 +14,7 @@ import com.ai.assistance.operit.data.model.AITool
 import com.ai.assistance.operit.data.model.ToolParameter
 import com.ai.assistance.operit.ui.features.chat.webview.workspace.workspaceMimeTypeForPath
 import com.ai.assistance.operit.util.AppLogger
+import com.ai.assistance.operit.util.OperitPaths
 import fi.iki.elonen.NanoHTTPD
 import java.io.ByteArrayInputStream
 import java.io.File
@@ -50,7 +51,7 @@ private constructor(
     private val port: Int,
     initialRootPath: String,
     private val type: ServerType
-) : NanoHTTPD(port) {
+) : NanoHTTPD("127.0.0.1", port) {
 
     @Volatile
     private var rootPath: String = initialRootPath
@@ -71,7 +72,7 @@ private constructor(
         private const val SOCK_CLOEXEC = 0x80000
 
         // Port constants
-        const val WORKSPACE_PORT = 8093
+        val WORKSPACE_PORT = BuildConfig.WORKSPACE_PORT
 
         @Volatile
         private var instances = mutableMapOf<ServerType, LocalWebServer>()
@@ -81,10 +82,7 @@ private constructor(
             return instances.getOrPut(type) {
                 val server: LocalWebServer = when (type) {
                     ServerType.WORKSPACE -> {
-                        val workspaceRoot = File(
-                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                            "Operit/workspace"
-                        )
+                        val workspaceRoot = OperitPaths.workspaceDir()
                         LocalWebServer(
                             context.applicationContext,
                             WORKSPACE_PORT,

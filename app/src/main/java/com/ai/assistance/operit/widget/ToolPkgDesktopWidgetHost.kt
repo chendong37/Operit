@@ -10,8 +10,10 @@ import kotlinx.coroutines.runBlocking
 import androidx.glance.appwidget.updateAll
 
 object ToolPkgDesktopWidgetHost {
-    const val EXTRA_OPEN_ROUTE_ID = "com.ai.assistance.operit.extra.OPEN_ROUTE_ID"
-    const val EXTRA_OPEN_ROUTE_ARGS_JSON = "com.ai.assistance.operit.extra.OPEN_ROUTE_ARGS_JSON"
+    val EXTRA_OPEN_ROUTE_ID =
+        com.ai.assistance.operit.core.application.AppIntentActions.openRouteIdExtra
+    val EXTRA_OPEN_ROUTE_ARGS_JSON =
+        com.ai.assistance.operit.core.application.AppIntentActions.openRouteArgsJsonExtra
 
     private const val PREFS_NAME = "toolpkg_desktop_widget_host"
     private const val KEY_PREFIX_SELECTION = "selection:"

@@ -1,6 +1,7 @@
 ﻿'use strict';
 
 const File = Java.type('java.io.File');
+const BuildConfig = Java.type('com.ai.assistance.operit.BuildConfig');
 
 function ensureDir(path) {
   const dir = new File(String(path));
@@ -62,7 +63,8 @@ async function callTool(name, params) {
 }
 
 async function run() {
-  const rootDir = '/sdcard/Download/Operit/js_test_ffmpeg_probe_' + Date.now();
+  const rootDir =
+    '/sdcard/Download/' + String(BuildConfig.PUBLIC_STORAGE_ROOT) + '/js_test_ffmpeg_probe_' + Date.now();
   ensureDir(rootDir);
 
   const simpleOutput = rootDir + '/simple_color.mp4';

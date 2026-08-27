@@ -89,7 +89,8 @@ exports.run = async function run() {
     }),
     test('application context returns to JS as proxy object', () => {
       const context = Java.getApplicationContext();
-      assertEq(String(context.getPackageName()), 'com.ai.assistance.operit');
+      const applicationId = String(Java.type('com.ai.assistance.operit.BuildConfig').APPLICATION_ID);
+      assertEq(String(context.getPackageName()), applicationId);
     }),
   ]);
 };

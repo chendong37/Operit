@@ -61,7 +61,7 @@ fun ShizukuDemoScreen(
 
     // 跟踪当前显示的权限级别
     var currentDisplayedPermissionLevel by remember {
-        mutableStateOf(AndroidPermissionLevel.STANDARD)
+        mutableStateOf(AndroidPermissionLevel.ACCESSIBILITY)
     }
 
     // Location permission launcher
@@ -74,14 +74,14 @@ fun ShizukuDemoScreen(
                 val coarseLocationGranted =
                         permissions[android.Manifest.permission.ACCESS_COARSE_LOCATION] ?: false
                 if (fineLocationGranted || coarseLocationGranted) {
-                    scope.launch(Dispatchers.IO) { viewModel.refreshStatus(context) }
+                    scope.launch(Dispatchers.IO) { viewModel.refreshStatus() }
                 }
             }
 
     // Register state change listeners
     DisposableEffect(Unit) {
         val shizukuListener: () -> Unit = {
-            scope.launch(Dispatchers.IO) { viewModel.refreshStatus(context) }
+            scope.launch(Dispatchers.IO) { viewModel.refreshStatus() }
         }
 
         ShizukuAuthorizer.addStateChangeListener(shizukuListener)
@@ -100,7 +100,7 @@ fun ShizukuDemoScreen(
         // 在IO线程上执行所有初始化
         withContext(Dispatchers.IO) {
             // 将初始化任务拆分成多个小任务，避免长时间阻塞
-            viewModel.initializeAsync(context)
+            viewModel.initializeAsync()
         }
 
         // 标记初始化完成
@@ -156,7 +156,7 @@ fun ShizukuDemoScreen(
                         AccessibilityProviderInstaller.clearCache()
                         ShizukuInstaller.clearCache()
                         AppLogger.d("ShizukuDemoScreen", "手动刷新：已清除无障碍和Shizuku版本缓存")
-                        viewModel.refreshStatus(context)
+                        viewModel.refreshStatus()
                     }
                 },
                 onStoragePermissionClick = {
@@ -381,15 +381,6 @@ fun ShizukuDemoScreen(
                             scope.launch(Dispatchers.IO) {
                                 viewModel.requestRootPermission(context)
                             }
-                        },
-                        onWatchTutorial = {
-                            try {
-                                val videoUrl = "https://magiskmanager.com/"
-                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl))
-                                context.startActivity(intent)
-                            } catch (e: Exception) {
-                                Toast.makeText(context, context.getString(R.string.cannot_open_root_tutorial), Toast.LENGTH_SHORT).show()
-                            }
                         }
                 )
 
@@ -564,7 +555,7 @@ fun ShizukuDemoScreen(
                                     }
 
                                     scope.launch(Dispatchers.IO) {
-                                        viewModel.refreshStatus(context)
+                                        viewModel.refreshStatus()
                                     }
                                 }
                             }

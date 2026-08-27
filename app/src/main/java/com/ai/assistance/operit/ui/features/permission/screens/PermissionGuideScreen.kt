@@ -39,8 +39,6 @@ import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -53,7 +51,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -98,9 +95,6 @@ fun PermissionGuideScreen(
     // 状态
     val uiState by viewModel.uiState.collectAsState()
     val pagerState = rememberPagerState(pageCount = { TOTAL_PAGES_COUNT })
-
-    // 警告对话框状态
-    var showPermissionWarning by remember { mutableStateOf(false) }
 
     // 初始化
     LaunchedEffect(Unit) { viewModel.checkPermissions(context) }
@@ -152,47 +146,6 @@ fun PermissionGuideScreen(
             delay(500) // 短暂延迟，让用户看到完成状态
             onComplete()
         }
-    }
-
-    // 权限警告对话框
-    if (showPermissionWarning) {
-        AlertDialog(
-                onDismissRequest = { showPermissionWarning = false },
-                icon = {
-                    Icon(
-                            imageVector = Icons.Default.Warning,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.error
-                    )
-                },
-                title = {
-                    Text(
-                            text = stringResource(R.string.permission_guide_warning_title),
-                            style = MaterialTheme.typography.titleMedium
-                    )
-                },
-                text = {
-                    Text(
-                            text = stringResource(R.string.permission_guide_warning_message),
-                            style = MaterialTheme.typography.bodyMedium
-                    )
-                },
-                confirmButton = {
-                    Button(
-                            onClick = {
-                                showPermissionWarning = false
-                                scope.launch {
-                                    pagerState.animateScrollToPage(PERMISSION_LEVEL_PAGE_INDEX)
-                                }
-                            }
-                    ) { Text(stringResource(R.string.permission_guide_warning_continue)) }
-                },
-                dismissButton = {
-                    TextButton(onClick = { showPermissionWarning = false }) {
-                        Text(stringResource(R.string.permission_guide_warning_return))
-                    }
-                }
-        )
     }
 
     Column(
@@ -446,11 +399,6 @@ fun PermissionGuideScreen(
                                     pagerState.currentPage == PERMISSION_LEVEL_PAGE_INDEX &&
                                             uiState.selectedPermissionLevel != null -> {
                                         viewModel.savePermissionLevel()
-                                    }
-                                    // 在基础权限页但未获得所有权限时，显示警告对话框
-                                    pagerState.currentPage == BASIC_PERMISSIONS_PAGE_INDEX &&
-                                            !uiState.allBasicPermissionsGranted -> {
-                                        showPermissionWarning = true
                                     }
                                     // 否则前进到下一页
                                     pagerState.currentPage < pagerState.pageCount - 1 -> {

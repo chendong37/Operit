@@ -97,34 +97,30 @@ if %DEVICE_COUNT% equ 1 (
     echo Selected device: !DEVICE_SERIAL!
 )
 
-REM Resolve the installed Debug or Release application package.
+REM Resolve the runtime applicationId; override with OPERIT_APP_PACKAGE when needed.
 set "APP_PACKAGE=%OPERIT_APP_PACKAGE%"
-if defined APP_PACKAGE (
-    if /I not "!APP_PACKAGE!"=="com.ai.assistance.operit.debug" if /I not "!APP_PACKAGE!"=="com.ai.assistance.operit" (
-        echo Error: Unsupported Operit application package - !APP_PACKAGE!
-        exit /b 1
-    )
-    adb -s "!DEVICE_SERIAL!" shell pm list packages "!APP_PACKAGE!" | findstr /x /c:"package:!APP_PACKAGE!" >nul
-    if errorlevel 1 (
-        echo Error: Operit application package is not installed - !APP_PACKAGE!
-        exit /b 1
-    )
-) else (
-    set "APP_PACKAGE="
-    for %%P in (com.ai.assistance.operit.debug com.ai.assistance.operit) do (
-        if not defined APP_PACKAGE (
-            adb -s "!DEVICE_SERIAL!" shell pm list packages "%%P" | findstr /x /c:"package:%%P" >nul
-            if not errorlevel 1 set "APP_PACKAGE=%%P"
-        )
-    )
-    if not defined APP_PACKAGE (
-        echo Error: Neither supported Operit application package is installed
-        exit /b 1
-    )
+if not defined APP_PACKAGE set "APP_PACKAGE=com.zhixing.ai"
+echo(!APP_PACKAGE!| findstr /r /x "[A-Za-z][A-Za-z0-9_]*\.[A-Za-z][A-Za-z0-9_.]*" >nul
+if errorlevel 1 (
+    echo Error: Invalid Android applicationId - !APP_PACKAGE!
+    exit /b 1
 )
-set "EXECUTE_JS_ACTION=com.ai.assistance.operit.EXECUTE_JS"
-set "SCRIPT_EXECUTION_RECEIVER=!APP_PACKAGE!/.core.tools.javascript.ScriptExecutionReceiver"
-echo Using Operit application package: !APP_PACKAGE!
+if not "!APP_PACKAGE:..=!"=="!APP_PACKAGE!" (
+    echo Error: Invalid Android applicationId - !APP_PACKAGE!
+    exit /b 1
+)
+if "!APP_PACKAGE:~-1!"=="." (
+    echo Error: Invalid Android applicationId - !APP_PACKAGE!
+    exit /b 1
+)
+adb -s "!DEVICE_SERIAL!" shell pm list packages "!APP_PACKAGE!" | findstr /x /c:"package:!APP_PACKAGE!" >nul
+if errorlevel 1 (
+    echo Error: Application package is not installed - !APP_PACKAGE!
+    exit /b 1
+)
+set "EXECUTE_JS_ACTION=!APP_PACKAGE!.EXECUTE_JS"
+set "SCRIPT_EXECUTION_RECEIVER=!APP_PACKAGE!/com.ai.assistance.operit.core.tools.javascript.ScriptExecutionReceiver"
+echo Using application package: !APP_PACKAGE!
 
 endlocal & set "DEVICE_SERIAL=%DEVICE_SERIAL%" & set "APP_PACKAGE=%APP_PACKAGE%" & set "EXECUTE_JS_ACTION=%EXECUTE_JS_ACTION%" & set "SCRIPT_EXECUTION_RECEIVER=%SCRIPT_EXECUTION_RECEIVER%"
 setlocal DisableDelayedExpansion

@@ -160,7 +160,10 @@ class PermissionGuideViewModel : ViewModel() {
         val hasBatteryOptimizationExemption: Boolean = false,
         val hasLocationPermission: Boolean = false,
         val allBasicPermissionsGranted: Boolean = false,
-        val selectedPermissionLevel: AndroidPermissionLevel? = null,
+        // 首次设置推荐“普通权限 + 无障碍”基线。这里只预选档位，仍需用户确认并在
+        // Android 系统设置中亲自开启无障碍服务，不会静默授予任何特殊权限。
+        val selectedPermissionLevel: AndroidPermissionLevel? =
+            AndroidPermissionLevel.ACCESSIBILITY,
         val isCompleted: Boolean = false
     )
 }

@@ -56,10 +56,10 @@ public class Main {
     private static final int DEFAULT_BIT_RATE = 4_000_000;
     private static final int CODEC_SIZE_ALIGNMENT = 16;
 
-    private static final String ACTION_SHOWER_BINDER_READY = "com.ai.assistance.operit.action.SHOWER_BINDER_READY";
     private static final String EXTRA_BINDER_CONTAINER = "binder_container";
 
     private static volatile String sTargetPackageName;
+    private static volatile String sLogFilePath = "/data/local/tmp/shower.log";
 
     private static ArrayList<String> getTargetPackages() {
         ArrayList<String> packages = new ArrayList<>();
@@ -74,7 +74,7 @@ public class Main {
                 continue;
             }
             String pkg = part.trim();
-            if (pkg.isEmpty()) {
+            if (pkg.isEmpty() || !pkg.matches("[A-Za-z0-9_.]+")) {
                 continue;
             }
             if (!packages.contains(pkg)) {
@@ -119,7 +119,7 @@ public class Main {
     static synchronized void logToFile(String msg, Throwable t) {
         try {
             if (fileLog == null) {
-                File logFile = new File("/data/local/tmp/shower.log");
+                File logFile = new File(sLogFilePath);
                 fileLog = new PrintWriter(new FileWriter(logFile, true), true);
             }
             long now = System.currentTimeMillis();
@@ -378,6 +378,12 @@ public class Main {
 
     public static void main(String... args) {
         sExitOnStop = true;
+        if (args != null
+                && args.length > 1
+                && args[1] != null
+                && args[1].matches("/data/local/tmp/shower-[A-Za-z0-9_-]+\\.log")) {
+            sLogFilePath = args[1];
+        }
         if (args != null && args.length > 0 && args[0] != null && !args[0].trim().isEmpty()) {
             sTargetPackageName = args[0].trim();
             logToFile("Using target package arg from args: " + sTargetPackageName, null);
@@ -774,22 +780,17 @@ public class Main {
 
     private void sendBinderToApp(IShowerService service) {
         try {
-            Intent baseIntent = new Intent(ACTION_SHOWER_BINDER_READY);
-            baseIntent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            baseIntent.putExtra(EXTRA_BINDER_CONTAINER, new ShowerBinderContainer(service.asBinder()));
-
             ArrayList<String> targetPackages = getTargetPackages();
             if (targetPackages.isEmpty()) {
-                boolean sent = sendBinderReadyViaActivityManager(baseIntent);
-                if (!sent) {
-                    logToFile("Failed to send SHOWER_BINDER_READY: ActivityManager path unavailable", null);
-                }
+                logToFile("Refusing to send SHOWER_BINDER_READY without a target package", null);
                 return;
             }
 
             boolean anySent = false;
             for (String pkg : targetPackages) {
-                Intent targetedIntent = new Intent(baseIntent);
+                Intent targetedIntent = new Intent(pkg + ".action.SHOWER_BINDER_READY");
+                targetedIntent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                targetedIntent.putExtra(EXTRA_BINDER_CONTAINER, new ShowerBinderContainer(service.asBinder()));
                 targetedIntent.setPackage(pkg);
                 boolean sent = sendBinderReadyViaActivityManager(targetedIntent);
                 anySent = anySent || sent;

@@ -27,6 +27,80 @@ if (localPropertiesFile.exists()) {
     localProperties.load(FileInputStream(localPropertiesFile))
 }
 
+val brandPropertiesFile = rootProject.file("app/branding/zhixing-ai.properties")
+require(brandPropertiesFile.isFile) {
+    "Missing central brand configuration: ${brandPropertiesFile.path}"
+}
+val brandProperties = Properties().apply {
+    brandPropertiesFile.reader(Charsets.UTF_8).use { reader -> load(reader) }
+}
+
+fun requiredBrandProperty(name: String): String {
+    val value = brandProperties.getProperty(name)?.trim()
+    require(!value.isNullOrEmpty()) {
+        "Brand configuration must define $name: ${brandPropertiesFile.path}"
+    }
+    return value
+}
+
+val brandApplicationId = requiredBrandProperty("applicationId")
+val brandAppName = requiredBrandProperty("appName")
+val brandDebugAppName = requiredBrandProperty("debugAppName")
+val brandCloneAppName = requiredBrandProperty("cloneAppName")
+val brandInternalAppName = requiredBrandProperty("internalAppName")
+val brandVersionCode = requiredBrandProperty("versionCode").toIntOrNull()
+    ?: error("Brand versionCode must be an integer: ${brandPropertiesFile.path}")
+val brandVersionName = requiredBrandProperty("versionName")
+val brandUpdateCheckEnabled = requiredBrandProperty("updateCheckEnabled").toBooleanStrictOrNull()
+    ?: error("Brand updateCheckEnabled must be true or false: ${brandPropertiesFile.path}")
+val brandDistributionChannel = requiredBrandProperty("distributionChannel")
+val brandPublicStorageRoot = requiredBrandProperty("publicStorageRoot")
+val brandWorkspacePort = requiredBrandProperty("workspacePort").toIntOrNull()
+    ?: error("Brand workspacePort must be an integer: ${brandPropertiesFile.path}")
+val brandExternalHttpDefaultPort = requiredBrandProperty("externalHttpDefaultPort").toIntOrNull()
+    ?: error("Brand externalHttpDefaultPort must be an integer: ${brandPropertiesFile.path}")
+require(brandApplicationId.matches(Regex("[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+"))) {
+    "Brand applicationId is invalid: $brandApplicationId"
+}
+require(brandPublicStorageRoot.matches(Regex("[A-Za-z0-9][A-Za-z0-9_-]*"))) {
+    "Brand publicStorageRoot must use only ASCII letters, digits, underscore, or hyphen: $brandPublicStorageRoot"
+}
+require(brandWorkspacePort in 1024..65535 && brandExternalHttpDefaultPort in 1024..65535) {
+    "Brand ports must be in the non-privileged range 1024..65535"
+}
+require(brandWorkspacePort != brandExternalHttpDefaultPort) {
+    "Brand workspace and external HTTP ports must be distinct"
+}
+val debugPortOffset = 10
+val clonePortOffset = 20
+require(
+    brandWorkspacePort + clonePortOffset <= 65535 &&
+        brandExternalHttpDefaultPort + clonePortOffset <= 65535
+) {
+    "Brand ports leave no room for isolated debug/clone variants"
+}
+require(
+    listOf(
+        brandWorkspacePort,
+        brandExternalHttpDefaultPort,
+        brandWorkspacePort + debugPortOffset,
+        brandExternalHttpDefaultPort + debugPortOffset,
+        brandWorkspacePort + clonePortOffset,
+        brandExternalHttpDefaultPort + clonePortOffset,
+    ).distinct().size == 6
+) {
+    "Brand ports and debug/clone offsets must all be distinct"
+}
+val shortcutActionSuffixes =
+    mapOf(
+        "app_action_open_voice_floating_window" to ".action.OPEN_VOICE_FLOATING_WINDOW",
+        "app_action_open_settings_shortcut" to ".action.OPEN_SETTINGS_SHORTCUT",
+        "app_action_open_data_recovery" to ".action.OPEN_DATA_RECOVERY",
+    )
+
+fun buildConfigString(value: String): String =
+    "\"${value.replace("\\", "\\\\").replace("\"", "\\\"")}\""
+
 data class SttModelAsset(
     val targetPath: String,
     val sourceUrl: String,
@@ -353,6 +427,23 @@ val syncMainAssets by tasks.registering(Sync::class) {
         exclude("models/**")
     }
     from(generatedSttModelAssetsDir)
+    from(rootProject.file("tools/sandboxpackage_dev_install_or_update.js")) {
+        into("tools")
+    }
+    from(rootProject.file("docs/SCRIPT_DEV_SKILL.md")) {
+        into("tools/sandboxpackage_dev")
+        rename { "SKILL.md" }
+    }
+    from(rootProject.file("docs/SCRIPT_DEV_GUIDE.md")) {
+        into("tools/sandboxpackage_dev/references")
+    }
+    from(rootProject.file("docs/TOOLPKG_FORMAT_GUIDE.md")) {
+        into("tools/sandboxpackage_dev/references")
+    }
+    from(rootProject.file("examples/types")) {
+        into("tools/sandboxpackage_dev/types")
+        include("*.d.ts")
+    }
     into(generatedMainAssetsDir)
 }
 
@@ -394,11 +485,22 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.ai.assistance.operit"
+        applicationId = brandApplicationId
         minSdk = 26
         targetSdk = 34
-        versionCode = 46
-        versionName = "1.12.1+3"
+        versionCode = brandVersionCode
+        versionName = brandVersionName
+        buildConfigField("boolean", "UPDATE_CHECK_ENABLED", brandUpdateCheckEnabled.toString())
+        buildConfigField("String", "BRAND_APPLICATION_ID", buildConfigString(brandApplicationId))
+        buildConfigField("String", "PRODUCT_NAME", buildConfigString(brandAppName))
+        buildConfigField("String", "DISTRIBUTION_CHANNEL", buildConfigString(brandDistributionChannel))
+        buildConfigField("String", "PUBLIC_STORAGE_ROOT", buildConfigString(brandPublicStorageRoot))
+        buildConfigField("int", "WORKSPACE_PORT", brandWorkspacePort.toString())
+        buildConfigField("int", "EXTERNAL_HTTP_DEFAULT_PORT", brandExternalHttpDefaultPort.toString())
+        resValue("string", "app_package_name", brandApplicationId)
+        shortcutActionSuffixes.forEach { (resourceName, suffix) ->
+            resValue("string", resourceName, brandApplicationId + suffix)
+        }
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -435,16 +537,53 @@ android {
         debug {
             applicationIdSuffix = ".debug"
             signingConfig = signingConfigs.getByName("debug")
-            resValue("string", "app_name", "Operit Debug")
+            buildConfigField(
+                "String",
+                "PUBLIC_STORAGE_ROOT",
+                buildConfigString("$brandPublicStorageRoot-debug"),
+            )
+            buildConfigField("int", "WORKSPACE_PORT", (brandWorkspacePort + debugPortOffset).toString())
+            buildConfigField(
+                "int",
+                "EXTERNAL_HTTP_DEFAULT_PORT",
+                (brandExternalHttpDefaultPort + debugPortOffset).toString(),
+            )
+            resValue("string", "app_name", brandDebugAppName)
+            resValue("string", "app_package_name", "$brandApplicationId.debug")
+            shortcutActionSuffixes.forEach { (resourceName, suffix) ->
+                resValue("string", resourceName, "$brandApplicationId.debug$suffix")
+            }
         }
         create("clone") {
             initWith(getByName("debug"))
             applicationIdSuffix = ".clone"
+            buildConfigField(
+                "String",
+                "PUBLIC_STORAGE_ROOT",
+                buildConfigString("$brandPublicStorageRoot-clone"),
+            )
+            buildConfigField("int", "WORKSPACE_PORT", (brandWorkspacePort + clonePortOffset).toString())
+            buildConfigField(
+                "int",
+                "EXTERNAL_HTTP_DEFAULT_PORT",
+                (brandExternalHttpDefaultPort + clonePortOffset).toString(),
+            )
             if (releaseSigningConfig != null) {
                 signingConfig = releaseSigningConfig
             }
             matchingFallbacks += listOf("debug")
-            resValue("string", "app_name", "Operit Clone")
+            resValue("string", "app_name", brandCloneAppName)
+            resValue("string", "app_package_name", "$brandApplicationId.clone")
+            shortcutActionSuffixes.forEach { (resourceName, suffix) ->
+                resValue("string", resourceName, "$brandApplicationId.clone$suffix")
+            }
+        }
+        create("internal") {
+            initWith(getByName("release"))
+            signingConfig = releaseSigningConfig ?: signingConfigs.getByName("debug")
+            matchingFallbacks += listOf("release")
+            resValue("string", "app_name", brandInternalAppName)
+            resValue("string", "app_package_name", brandApplicationId)
         }
         create("nightly") {
             isMinifyEnabled = false
@@ -471,6 +610,17 @@ android {
             outputs.all {
                 val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
                 output.outputFileName = "app-clone.apk"
+            }
+        }
+        if (buildType.name == "internal") {
+            outputs.all {
+                val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+                output.outputFileName =
+                    if (signingConfigs.findByName("release") != null) {
+                        "zhixing-ai-internal.apk"
+                    } else {
+                        "zhixing-ai-internal-dev-signed.apk"
+                    }
             }
         }
     }

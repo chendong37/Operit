@@ -1,6 +1,7 @@
 package com.ai.assistance.operit.data.updates
 
 import android.content.Context
+import com.ai.assistance.operit.BuildConfig
 import com.ai.assistance.operit.util.AppLogger
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -96,6 +97,9 @@ class UpdateManager private constructor(private val context: Context) {
 
         /** 检查更新，返回更新状态 用于从MainActivity直接检查更新 */
         suspend fun checkForUpdates(context: Context, currentVersion: String): UpdateStatus {
+            if (!BuildConfig.UPDATE_CHECK_ENABLED) {
+                return UpdateStatus.UpToDate
+            }
             val manager = getInstance(context)
             return manager.checkForUpdatesInternal(currentVersion)
         }
@@ -131,6 +135,9 @@ class UpdateManager private constructor(private val context: Context) {
 
     /** 检查更新的内部实现 */
     private suspend fun checkForUpdatesInternal(currentVersion: String): UpdateStatus {
+        if (!BuildConfig.UPDATE_CHECK_ENABLED) {
+            return UpdateStatus.UpToDate
+        }
         return withContext(Dispatchers.IO) {
             try {
                 val betaEnabled = try {

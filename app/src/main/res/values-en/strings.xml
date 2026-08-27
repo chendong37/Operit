@@ -1,5 +1,5 @@
  <resources>
-    <string name="app_name">Operit AI</string>
+    <string name="app_name">Zhixing AI</string>
     <string name="accessibility_service_description">Used to obtain the UI hierarchy, providing faster interface analysis capabilities for AI assistants, and does not collect or store any personal information.</string>
     
     <!-- Model selector related -->
@@ -263,6 +263,11 @@
     <string name="workflow_trigger_type_manual">Manual</string>
     <string name="workflow_trigger_type_schedule">Schedule</string>
     <string name="workflow_trigger_type_tasker">Tasker</string>
+    <string name="workflow_tasker_action_label">Zhixing AI Workflow</string>
+    <string name="workflow_tasker_command_desc">Enter the workflow command to trigger. It must exactly match the command in the workflow's Tasker trigger.</string>
+    <string name="workflow_tasker_command_hint">Example: start_meeting</string>
+    <string name="workflow_tasker_command_required">Workflow command is required</string>
+    <string name="workflow_tasker_save">Save to Tasker</string>
     <string name="workflow_trigger_type_intent">Intent</string>
     <string name="workflow_trigger_type_speech">Speech</string>
     <string name="workflow_trigger_type_app_open">On App Open</string>
@@ -562,7 +567,7 @@
     <string name="danger_zone">Danger Zone</string>
     <string name="chat_statistics">Chat Statistics</string>
     <string name="current_chats">Currently %1$d chat records</string>
-    <string name="backup_location">Backup files are saved in the \"Download/Operit\" folder</string>
+    <string name="backup_location">Backup files are saved in the \"Download/ZhixingAI\" folder</string>
     <string name="faq_backup">FAQ</string>
     
     <!-- Terminal Screen -->
@@ -582,9 +587,9 @@
     <string name="termux_setup_guide">Termux Setup Guide</string>
     
     <!-- About Screen -->
-    <string name="about_title">About Operit AI</string>
+    <string name="about_title">About Zhixing AI</string>
     <string name="about_version">Version: %1$s</string>
-    <string name="about_description">Operit AI is an intelligent assistant application that helps users use their devices more efficiently, providing interface analysis, chat conversations, and more.</string>
+    <string name="about_description">Zhixing AI is a team assistant customized from Operit for phone automation, knowledge management, software delivery, and teaching content.</string>
     <string name="about_developer">Developer: &lt;a href="https://github.com/AAswordman"&gt;AAswordman&lt;/a&gt;</string>
     <string name="about_contact">Contact Us: aaswordsman@foxmail.com</string>
     <string name="about_website">&lt;a href="https://github.com/AAswordman/Operit"&gt;GitHub: https://github.com/AAswordman/Operit&lt;/a&gt;</string>
@@ -610,7 +615,7 @@
     <string name="network_status_label">Network Status</string>
 
     <!-- Configuration Screen -->
-    <string name="config_title">Operit AI Assistant</string>
+    <string name="config_title">Zhixing AI Assistant</string>
     <string name="config_description">Use a DeepSeek API Key or configure another model service</string>
     <string name="config_api_key_label">API Key</string>
     <string name="config_api_key_placeholder">DeepSeek API Key</string>
@@ -1097,7 +1102,7 @@
     <string name="copy_path">Copy Path</string>
     <string name="path_copied_to_clipboard">Path copied to clipboard</string>
     <string name="open_file_manager">Open File Manager</string>
-    <string name="navigate_to_external_files">Please navigate to Android/data/com.ai.assistance.operit/files/packages directory</string>
+    <string name="navigate_to_external_files">Please navigate to the current app’s files/packages directory under Android/data</string>
     <string name="package_js_only">Only JavaScript (.js) and ToolPkg (.toolpkg) files are supported</string>
     <string name="pkg_toolpkg_subpackages">ToolPkg Subpackages</string>
     <string name="pkg_toolpkg_version">Version: %1$s</string>
@@ -1209,42 +1214,42 @@
     <string name="permission_guide_next">Next</string>
     <string name="permission_guide_complete">Complete</string>
     <string name="permission_guide_welcome">Welcome</string>
-    <string name="permission_guide_basic_permissions">Basic Permissions</string>
+    <string name="permission_guide_basic_permissions">Feature Permissions</string>
     <string name="permission_guide_permission_level">Permission Level</string>
     
     <string name="permission_guide_welcome_title">Welcome</string>
-    <string name="permission_guide_welcome_desc">Before using the app, we need to set up some basic permissions and select your preferred permission level.</string>
+    <string name="permission_guide_welcome_desc">Before you begin, choose permissions for the features you actually use; you do not need to grant everything.</string>
     <string name="permission_guide_welcome_hint">This process takes just a few minutes and will help the app serve you better.</string>
     <string name="permission_guide_welcome_start">Click the button in the lower right corner to start setup</string>
     
-    <string name="permission_guide_basic_title">Basic Permissions</string>
-    <string name="permission_guide_basic_desc">Please grant the following basic permissions to ensure the app functions properly</string>
+    <string name="permission_guide_basic_title">Feature Permissions</string>
+    <string name="permission_guide_basic_desc">These permissions are not all required. Grant only what the features you use need; you can change them later.</string>
     <string name="permission_guide_storage_title">Storage Permission</string>
-    <string name="permission_guide_storage_desc">Allow the app to read and write files</string>
+    <string name="permission_guide_storage_desc">Grant when you need shared-file management</string>
     <string name="permission_guide_overlay_title">Overlay Permission</string>
-    <string name="permission_guide_overlay_desc">Allow the app to display floating windows</string>
+    <string name="permission_guide_overlay_desc">Grant for floating chat or phone automation</string>
     <string name="permission_guide_battery_title">Battery Optimization Exemption</string>
-    <string name="permission_guide_battery_desc">Allow the app to run in the background</string>
+    <string name="permission_guide_battery_desc">Exempt only when continuous background work is needed</string>
     <string name="permission_guide_location_title">Location Permission</string>
-    <string name="permission_guide_location_desc">Allow the app to access location information</string>
+    <string name="permission_guide_location_desc">Off by default; grant only for location-related tasks</string>
     <string name="permission_guide_check_permissions">Check Permission Status</string>
-    <string name="permission_guide_all_granted">All basic permissions granted, you can continue to the next step</string>
+    <string name="permission_guide_all_granted">All listed feature permissions are enabled; you can continue</string>
     
-    <string name="permission_guide_warning_title">Incomplete Permissions</string>
-    <string name="permission_guide_warning_message">You have not granted all necessary permissions, which may result in incomplete functionality or abnormal app behavior. Are you sure you want to continue?</string>
+    <string name="permission_guide_warning_title">Some Feature Permissions Are Off</string>
+    <string name="permission_guide_warning_message">You can continue. A missing permission affects only its related feature and can be enabled when needed.</string>
     <string name="permission_guide_warning_continue">Continue</string>
     <string name="permission_guide_warning_return">Return to Permissions</string>
     
     <string name="permission_guide_level_title">Select Permission Level</string>
-    <string name="permission_guide_level_desc">Please select your preferred permission level, which will determine the range of features the app can use</string>
+    <string name="permission_guide_level_desc">Standard + Accessibility is recommended. Shizuku is an optional non-root enhancement; Root is only for devices that are already rooted.</string>
     <string name="permission_guide_standard_title">Standard Permissions</string>
     <string name="permission_guide_standard_desc">Basic app operation permissions, no special permissions required</string>
-    <string name="permission_guide_accessibility_title">Accessibility Permissions</string>
-    <string name="permission_guide_accessibility_desc">Enables screen content analysis and operation simulation via accessibility service</string>
+    <string name="permission_guide_accessibility_title">Accessibility (Recommended)</string>
+    <string name="permission_guide_accessibility_desc">Phone-automation baseline; you must still enable the service in Android Settings</string>
     <string name="permission_guide_debugger_title">Debug Permissions</string>
-    <string name="permission_guide_debugger_desc">Provides ADB-level system access through Shizuku</string>
-    <string name="permission_guide_root_title">Root Permissions</string>
-    <string name="permission_guide_root_desc">Superuser permissions, can perform any system operations</string>
+    <string name="permission_guide_debugger_desc">Optional non-root ADB-level capabilities through Shizuku</string>
+    <string name="permission_guide_root_title">Root (Exception Only)</string>
+    <string name="permission_guide_root_desc">Only for managed devices that are already rooted; never required to install or use the app</string>
     <string name="permission_guide_confirm">Confirm Selection</string>
     <string name="permission_guide_change_anytime">You can change the permission level in settings at any time</string>
     
@@ -1265,20 +1270,21 @@
     <string name="wizard_open_docs">Official Docs</string>
     
     <!-- RootWizardCard -->
-    <string name="root_wizard_title">Root Permission Setup Wizard</string>
-    <string name="root_wizard_step1">Step 1: Root Device</string>
+    <string name="root_wizard_title">Existing Root Device Exception</string>
+    <string name="root_wizard_step1">Root is off (normal)</string>
     <string name="root_wizard_step2">Step 2: Grant Root Permission</string>
     <string name="root_wizard_completed">Root Permission Setup Complete</string>
-    <string name="root_wizard_success_message">Congratulations! Root permission has been granted. You can now perform privileged operations.</string>
+    <string name="root_wizard_success_message">Root access is granted. Each privileged command still requires confirmation and must be limited to the approved operation.</string>
     <string name="root_wizard_test_command">Test Root Command</string>
-    <string name="root_wizard_device_rooted_message">Your device is rooted, but the app hasn\'t been granted root permission. Please click the button below to request permission from your ROOT manager (like Magisk, SuperSU, etc.).</string>
-    <string name="root_wizard_how_to_get_root">How to get Root permission:</string>
-    <string name="root_wizard_how_to_get_root_steps">1. Click the \"Request Root Permission\" button below\n2. Select \"Allow\" in the ROOT manager popup\n3. If you don\'t see a popup, check your ROOT manager settings</string>
-    <string name="root_wizard_request_permission">Request Root Permission</string>
+    <string name="root_wizard_device_rooted_message">Request access only when this device was already rooted, is registered, and is approved for Root use.</string>
+    <string name="root_wizard_how_to_get_root">Enable existing Root access:</string>
+    <string name="root_wizard_how_to_get_root_steps">1. Verify the device record, package name, and signing certificate\n2. Tap the button below\n3. Verify the request in the Root manager before allowing it</string>
+    <string name="root_wizard_request_permission">Request Existing Root Access</string>
+    <string name="root_wizard_check_existing_root">Check and Request Existing Root</string>
     <string name="root_wizard_view_tutorial">View Root Tutorial</string>
-    <string name="root_wizard_device_not_rooted">Your device is not rooted. ROOT requires specific system modifications and may void your warranty. If you need to use ROOT features, please complete the device ROOT process first.</string>
-    <string name="root_wizard_risk_notice">Note: Root Operation Risk Warning</string>
-    <string name="root_wizard_risk_details">1. ROOT operations carry risk and may void your warranty\n2. Some apps may refuse to run on rooted devices\n3. Improper ROOT operations may cause system instability</string>
+    <string name="root_wizard_device_not_rooted">Root is not required. Standard + Accessibility is the default; Shizuku is optional for ADB capabilities. Do not root a device for Zhixing AI. If this device was already rooted, verify its registration before tapping below.</string>
+    <string name="root_wizard_risk_notice">Root Is Not the Team Baseline</string>
+    <string name="root_wizard_risk_details">This app does not provide bootloader, flashing, or rooting instructions. Root remains available only for managed devices that were already rooted, and every privileged command still requires confirmation.</string>
     
     <!-- ShizukuWizardCard -->
     <string name="shizuku_wizard_title">Shizuku Setup Wizard</string>
@@ -1402,25 +1408,25 @@
     
     <!-- Permission Level Descriptions -->
     <string name="permission_level_standard">Standard Permission</string>
-    <string name="permission_level_accessibility">Accessibility Permission</string>
+    <string name="permission_level_accessibility">Accessibility (Recommended)</string>
     <string name="permission_level_admin">Admin Permission</string>
     <string name="permission_level_debugger">Debug Permission</string>
     <string name="permission_level_root">Root Permission</string>
     <string name="permission_level_standard_desc">Basic application permissions, no special system authorization required</string>
     <string name="permission_level_accessibility_desc">Added accessibility service support, can simulate screen operations</string>
     <string name="permission_level_admin_desc">Added device administrator permissions, can access more system functions</string>
-    <string name="permission_level_debugger_desc">Provides ADB-level system access through Shizuku</string>
-    <string name="permission_level_root_desc">Superuser permissions, can execute any system operations</string>
+    <string name="permission_level_debugger_desc">Optional non-root ADB-level capabilities through Shizuku</string>
+    <string name="permission_level_root_desc">Only for managed devices that are already rooted; never an installation requirement</string>
     <string name="permission_level_standard_full_desc">Standard Permissions: Basic application permissions, no special privileges required</string>
-    <string name="permission_level_accessibility_full_desc">Accessibility Permissions: Allows the app to simulate user operations, requires enabling accessibility services</string>
+    <string name="permission_level_accessibility_full_desc">Accessibility (recommended): phone-automation baseline; the user must enable the service in Android Settings</string>
     <string name="permission_level_admin_full_desc">Admin Permissions: Allows the app to access more system functions, such as location services</string>
-    <string name="permission_level_debugger_full_desc">Debug Permissions: Allows advanced operations through ADB debugging functions, requires Shizuku service</string>
-    <string name="permission_level_root_full_desc">Root Permissions: Allows the app to run as superuser, requires a rooted device</string>
+    <string name="permission_level_debugger_full_desc">Debug (optional): non-root ADB-level capabilities through Shizuku</string>
+    <string name="permission_level_root_full_desc">Root (exception): explicit opt-in only on managed devices that were already rooted</string>
     
     <!-- Root Status Information -->
     <string name="root_access_granted">App has gained Root access, can execute privileged commands</string>
     <string name="device_rooted_request_permission">Device is rooted, click to request app permissions</string>
-    <string name="device_not_rooted">Device is not rooted, unable to obtain Root permissions</string>
+    <string name="device_not_rooted">Root is off; use Accessibility by default or optional Shizuku for ADB capabilities</string>
     
     <!-- Toast Messages -->
     <string name="toast_download_link_failed">Unable to open download link</string>
@@ -1551,6 +1557,7 @@
 
     <!-- About Screen -->
     <string name="check_for_updates">Check for Updates</string>
+    <string name="internal_update_distribution">Internal versions are distributed by the team</string>
     <string name="checking_updates">Checking...</string>
     <string name="new_version_found">New Version Available</string>
     <string name="check_complete">Check Complete</string>
@@ -1819,13 +1826,13 @@
     <string name="external_http_chat_enable">Enable External HTTP Service</string>
     <string name="external_http_chat_enable_desc">Starts the external HTTP service and binds it to 0.0.0.0. The same port serves both the HTTP API and the browser-accessible web chat UI</string>
     <string name="external_http_chat_port">Listen Port</string>
-    <string name="external_http_chat_port_desc">Default is 8094. The service listens on 0.0.0.0:PORT. Saving restarts the service when it is enabled</string>
+    <string name="external_http_chat_port_desc">Default is 18094. The service listens on 0.0.0.0:PORT. Saving restarts the service when it is enabled</string>
     <string name="external_http_chat_save_port">Save Port</string>
     <string name="external_http_chat_port_saved">Port saved</string>
     <string name="external_http_chat_invalid_port">Invalid port. Enter a value between 1 and 65535</string>
     <string name="external_http_chat_token">Bearer Token</string>
-    <string name="external_http_chat_token_desc">Generated automatically on first enable. Clients must send it in the Authorization header</string>
-    <string name="external_http_chat_token_not_generated">Not generated yet. Enable the service first</string>
+    <string name="external_http_chat_token_desc">Generated when this page opens. Send it in the HTTP Authorization header or the auth_token Intent extra; rotating it revokes every external entry point</string>
+    <string name="external_http_chat_token_not_generated">Generating now. Try again in a moment</string>
     <string name="external_http_chat_copy_token">Copy Token</string>
     <string name="external_http_chat_reset_token">Reset Token</string>
     <string name="external_http_chat_token_copied">Token copied</string>
@@ -1846,8 +1853,8 @@
     <string name="external_http_chat_async_example">Async Callback Example</string>
     <string name="external_http_chat_health_example">Health Check Example</string>
     <string name="external_http_chat_intent_title">Intent Calling Guide</string>
-    <string name="external_http_chat_intent_desc">The broadcast entry is still available for local app integration, Tasker, or adb debugging</string>
-    <string name="external_http_chat_intent_overview">HTTP and Intent share the same parameter semantics. Only the entry method is different.\n\nRequest action: %1$s\nDefault result action: %2$s\n\nCommon extras: message, request_id, group, create_new_chat, chat_id, create_if_none, show_floating, return_tool_status, initial_mode, auto_exit_after_ms, stop_after, reply_action, reply_package\n\nAfter completion, Operit returns success, chat_id, ai_response, and error by broadcast. If the result should only be delivered to one app, set reply_package.</string>
+    <string name="external_http_chat_intent_desc">Local apps, Tasker, and adb must target the explicit Receiver component and include the same token shown above</string>
+    <string name="external_http_chat_intent_overview">HTTP and Intent share the same parameter semantics. Only the entry method differs.\n\nRequest action: %1$s\nDefault result action: %2$s\n\nAuthentication extra: auth_token (required)\nCommon extras: message, request_id, group, create_new_chat, chat_id, create_if_none, show_floating, return_tool_status, initial_mode, auto_exit_after_ms, stop_after, reply_action, reply_package\n\nZhixing AI returns success, chat_id, ai_response, and error by explicit broadcast. External callers must set reply_package; without it, the result is delivered only to Zhixing AI itself.</string>
     <string name="external_http_chat_copy_example">Copy Example</string>
     <string name="external_http_chat_example_copied">Example command copied</string>
     <string name="external_http_chat_service_enabled">Service enabled</string>
@@ -4413,9 +4420,9 @@
     <string name="import_color_qr">Import Color QR</string>
     <string name="scan_color_qr">Scan Color QR</string>
     <string name="tavern_json">Tavern JSON</string>
-    <string name="export_tavern_json_desc">Export as .json and save to Download/Operit/exports</string>
+    <string name="export_tavern_json_desc">Export as .json and save to Download/ZhixingAI/exports</string>
     <string name="tavern_png">Tavern PNG</string>
-    <string name="export_tavern_png_desc">Export as image importable to Tavern and save to Download/Operit/exports</string>
+    <string name="export_tavern_png_desc">Export as image importable to Tavern and save to Download/ZhixingAI/exports</string>
     <string name="image_read_error">Cannot read image</string>
     <string name="image_parse_error">Cannot parse image</string>
     <string name="color_qr_not_recognized">Cannot recognize color QR code</string>
@@ -4872,15 +4879,15 @@
 
     <!-- Default Assistant Setup Guide -->
     <string name="default_assistant_guide_title">Set Default Voice Assistant</string>
-    <string name="default_assistant_guide_subtitle">Make Operit Your Smart Assistant</string>
-    <string name="default_assistant_guide_intro">After setting Operit as the default system assistant, you can quickly launch the Operit voice assistant by long-pressing the Home button or using voice wake-up, providing a more convenient AI interaction experience.</string>
+    <string name="default_assistant_guide_subtitle">Make Zhixing AI Your Smart Assistant</string>
+    <string name="default_assistant_guide_intro">After setting Zhixing AI as the default system assistant, you can launch it with a long press of Home or a supported system gesture.</string>
     <string name="default_assistant_guide_steps_title">Setup Steps</string>
     
     <!-- Step 1 -->
     <string name="default_assistant_guide_step1_title">Open System Settings</string>
     <string name="default_assistant_guide_step1_desc">First, you need to enter the Android system settings interface</string>
     <string name="default_assistant_guide_step1_detail1">• Open System Settings → Apps → Default apps → Digital assistant app</string>
-    <string name="default_assistant_guide_step1_detail2">• Find and select "Operit AI" in the assistant app list</string>
+    <string name="default_assistant_guide_step1_detail2">• Find and select "Zhixing AI" in the assistant app list</string>
     <string name="default_assistant_guide_step1_detail_android12">Android 12+: Settings → Apps → Default apps → Digital assistant app → Default digital assistant app</string>
     <string name="default_assistant_guide_open_settings">Open Settings</string>
     
@@ -4895,24 +4902,24 @@
     <string name="default_assistant_guide_step2_detail_android12">Android 12+: Settings → Apps → Default apps → Digital assistant app → Default digital assistant app</string>
     
     <!-- Step 3 -->
-    <string name="default_assistant_guide_step3_title">Select Operit</string>
-    <string name="default_assistant_guide_step3_desc">Choose Operit AI from the assistant app list</string>
-    <string name="default_assistant_guide_step3_detail1">• Find \"Operit AI\" in the available assistant apps list</string>
-    <string name="default_assistant_guide_step3_detail2">• Tap to select, and the system will set Operit as the default assistant</string>
+    <string name="default_assistant_guide_step3_title">Select Zhixing AI</string>
+    <string name="default_assistant_guide_step3_desc">Choose Zhixing AI from the assistant app list</string>
+    <string name="default_assistant_guide_step3_detail1">• Find \"Zhixing AI\" in the available assistant apps list</string>
+    <string name="default_assistant_guide_step3_detail2">• Tap to select, and the system will set Zhixing AI as the default assistant</string>
     <string name="default_assistant_guide_step3_detail3">• You can try speaking or typing to interact with the assistant</string>
     
     <!-- Step 4 -->
     <string name="default_assistant_guide_step4_title">Test Voice Assistant</string>
     <string name="default_assistant_guide_step4_desc">After setup, test if it can be launched normally</string>
-    <string name="default_assistant_guide_step4_detail1">• Long-press the Home button (home screen button) should invoke Operit voice assistant</string>
-    <string name="default_assistant_guide_step4_detail2">• If voice wake-up is supported, saying \"Hey Google\" or your device\'s designated wake word may also trigger Operit</string>
+    <string name="default_assistant_guide_step4_detail1">• Long-press the Home button to invoke the Zhixing AI voice assistant</string>
+    <string name="default_assistant_guide_step4_detail2">• A supported device wake phrase may also trigger Zhixing AI</string>
     
     <!-- Troubleshooting -->
     <string name="default_assistant_guide_troubleshooting_title">Having Problems?</string>
-    <string name="default_assistant_guide_troubleshooting_content">If you can\'t find Operit in the list, please ensure:\n\n• The app is properly installed and not disabled\n• Necessary permissions have been granted (microphone, overlay, etc.)\n• Try restarting the device and setting it up again\n\nSome custom systems may restrict third-party apps from being set as default assistants. If you encounter this situation, you can still use Operit through the in-app floating window feature.</string>
+    <string name="default_assistant_guide_troubleshooting_content">If you can\'t find Zhixing AI in the list, ensure that the app is installed and enabled, required permissions are granted, and then restart the device. If the system blocks third-party default assistants, use the in-app floating window instead.</string>
 
     <!-- Voice Interaction Service -->
-    <string name="voice_interaction_service_name">Operit AI Assistant</string>
+    <string name="voice_interaction_service_name">Zhixing AI Assistant</string>
     <string name="voice_interaction_service_summary">Intelligent voice assistant service</string>
 
     <!-- Tool Permission Settings -->
@@ -5187,7 +5194,7 @@
     <string name="start_with_new_chat_description">When enabled, each app launch opens a new blank chat instead of reopening the previous conversation.</string>
     <string name="software_identity_title">Software Identity</string>
     <string name="software_identity_description">Change the software identity shown at the top of the sidebar.</string>
-    <string name="software_identity_option_operit">Operit AI</string>
+    <string name="software_identity_option_operit">Zhixing AI</string>
     <string name="software_identity_option_lingshu">Lingshu AI</string>
     <string name="reset_all_display_settings">Reset All Display Settings</string>
     
@@ -5265,7 +5272,7 @@
     <string name="backup_memory_files">Memory</string>
     <string name="backup_model_config_files">Model Config</string>
     <string name="backup_room_db_files">Database</string>
-    <string name="backup_files_location_hint">Tip: backup files are saved in Download/Operit folder</string>
+    <string name="backup_files_location_hint">Tip: backup files are saved in Download/ZhixingAI folder</string>
 
     <string name="backup_room_db_title">Database (Auto + Manual Backup)</string>
     <string name="backup_room_db_subtitle">Daily backup of Room SQLite database, keep up to %1$d backups (older ones will be deleted automatically)</string>
@@ -5356,7 +5363,7 @@
     <string name="backup_faq_why">Why backup data?</string>
     <string name="backup_faq_why_answer">Backing up chat history prevents important content loss when the app is uninstalled or data is lost. Regular backups are a good habit!</string>
     <string name="backup_faq_where">Where are exported files saved?</string>
-    <string name="backup_faq_where_answer">Exported backup files are saved in the \"Download/Operit\" folder on your phone, with filenames containing the data type, date and time.</string>
+    <string name="backup_faq_where_answer">Exported backup files are saved in the \"Download/ZhixingAI\" folder on your phone, with filenames containing the data type, date and time.</string>
     <string name="backup_faq_duplicate">Will importing create duplicate data?</string>
     <string name="backup_faq_duplicate_answer">The system uses record IDs to determine duplicates. Records with the same ID will be updated rather than duplicated. Records with different IDs will be added as new entries.</string>
     
@@ -5391,7 +5398,7 @@
 
     <string name="backup_character_cards_title">Character Cards</string>
     <string name="backup_character_cards_subtitle">Backup and restore character card settings</string>
-    <string name="backup_character_cards_current_count">Currently %1$d character card(s). Exported files will be saved in the "Download/Operit" folder.</string>
+    <string name="backup_character_cards_current_count">Currently %1$d character card(s). Exported files will be saved in the "Download/ZhixingAI" folder.</string>
     <string name="backup_character_card_count">Character Cards</string>
     <string name="backup_character_card_files">Character Cards</string>
 
@@ -7019,7 +7026,7 @@
     <string name="html_export_updated">Updated</string>
     <string name="html_export_group">Group</string>
     <string name="html_export_message_count">Message Count</string>
-    <string name="html_export_footer">Exported from Operit AI Assistant</string>
+    <string name="html_export_footer">Exported from Zhixing AI</string>
 
     <!-- MnnModelDownloadManager -->
     <string name="mnn_no_cache_data">No cache data</string>
@@ -8085,11 +8092,11 @@
     <string name="artifact_project_node_selection_hint">Click to select a node, click again to deselect.</string>
     <string name="plugin_creation_fresh_task_line">Please activate the Operit Editor and use the sandbox package dev toolkit to develop a new sandbox package.</string>
     <string name="plugin_creation_fresh_package_rule_line">First determine the new sandbox package ID, do not rename it later.</string>
-    <string name="plugin_creation_fresh_dev_directory_line">The development directory is fixed to Downloads/Operit/dev_package/your_determined_id. Development, installation, and testing are all done here.</string>
+    <string name="plugin_creation_fresh_dev_directory_line">The development directory is fixed to Downloads/ZhixingAI/dev_package/your_determined_id. Development, installation, and testing are all done here.</string>
     <string name="plugin_creation_continue_task_line">Please activate the Operit Editor, locate the sandbox package %1$s, and continue development and testing based on this version.</string>
     <string name="plugin_creation_merge_task_line">Please activate the Operit Editor, locate the sandbox package %1$s, and perform merge development and testing based on this version.</string>
     <string name="plugin_creation_existing_package_rule_line">Current sandbox package ID is %1$s. The package ID and plugin name must be kept; do not rename or create a new package.</string>
-    <string name="plugin_creation_existing_dev_directory_line">The development directory is fixed to Downloads/Operit/dev_package/%1$s. Development, installation, and testing are all done here.</string>
+    <string name="plugin_creation_existing_dev_directory_line">The development directory is fixed to Downloads/ZhixingAI/dev_package/%1$s. Development, installation, and testing are all done here.</string>
     <string name="plugin_creation_update_sandbox_package_dev">First update SandboxPackage_DEV.</string>
     <string name="plugin_creation_copy_types_to_dev_dir">Copy the types from skills to the development directory, overwriting existing files.</string>
     <string name="plugin_creation_use_terminal_ts_js_hint">Use the terminal as much as possible, prioritize writing ts and js, then compile to final js. Refer to examples for tsconfig.</string>

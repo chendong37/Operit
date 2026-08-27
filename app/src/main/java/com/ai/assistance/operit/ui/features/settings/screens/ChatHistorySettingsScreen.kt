@@ -4,8 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Environment
 import com.ai.assistance.operit.util.AppLogger
+import com.ai.assistance.operit.util.OperitPaths
 import android.widget.Toast
 import java.io.File
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -202,9 +202,8 @@ fun ChatHistorySettingsScreen() {
                     }
                 }
 
-                // 2. 检查外部存储工作区（旧位置）
-                val downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                val externalWorkspaceDir = File(downloadDir, "Operit/workspace")
+                // 2. 检查知行 AI 自己的外部存储工作区；不读取上游 Operit 目录。
+                val externalWorkspaceDir = OperitPaths.workspaceDir()
                 if (externalWorkspaceDir.exists() && externalWorkspaceDir.isDirectory) {
                     externalWorkspaceDir.listFiles { file -> file.isDirectory }?.forEach { dir ->
                         val fullPath = dir.absolutePath
@@ -2330,4 +2329,3 @@ private suspend fun deleteSelectedChatHistories(
             skippedLockedCount = skippedLockedCount
         )
     }
-

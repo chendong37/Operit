@@ -42,7 +42,7 @@ import kotlinx.serialization.Serializable
  * - 官方MCP配置格式的读写
  * - 插件配置管理
  * - 服务器状态管理
- * - 统一存储在下载/Operit/mcp_plugins目录
+ * - 统一存储在 OperitPaths 分配给当前应用的 mcp_plugins 目录
  */
 class MCPLocalServer private constructor(private val context: Context) {
     companion object {
@@ -73,7 +73,7 @@ class MCPLocalServer private constructor(private val context: Context) {
 
     // 配置目录路径
     private val configBaseDir by lazy {
-        OperitPaths.mcpPluginsDir()
+        OperitPaths.writableMcpPluginsDir(context.applicationContext)
     }
 
     // 配置文件路径

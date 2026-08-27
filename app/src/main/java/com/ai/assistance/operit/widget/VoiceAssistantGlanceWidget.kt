@@ -98,7 +98,7 @@ fun VoiceAssistantWidgetContent(context: Context) {
 
                 // 标题文字
                 Text(
-                    text = "Operit",
+                    text = context.getString(R.string.app_name),
                     style = TextStyle(
                         fontSize = 16.sp,
                         color = ColorProvider(Color.White)
@@ -119,4 +119,3 @@ fun VoiceAssistantWidgetContent(context: Context) {
         }
     }
 }
-

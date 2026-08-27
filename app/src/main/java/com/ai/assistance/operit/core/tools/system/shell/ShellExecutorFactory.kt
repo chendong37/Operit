@@ -56,15 +56,18 @@ class ShellExecutorFactory {
                 context: Context
         ): Pair<ShellExecutor, ShellExecutor.PermissionStatus> {
 
-            // 按权限从高到低尝试
+            // Root 不是自动候选。只有用户已经明确选择 ROOT 档位时才允许探测 su。
+            val rootExplicitlySelected =
+                    androidPermissionPreferences.getPreferredPermissionLevel() ==
+                            AndroidPermissionLevel.ROOT
             val levels =
-                    listOf(
-                            AndroidPermissionLevel.ROOT,
-                            AndroidPermissionLevel.ADMIN,
-                            AndroidPermissionLevel.DEBUGGER,
-                            AndroidPermissionLevel.ACCESSIBILITY,
-                            AndroidPermissionLevel.STANDARD
-                    )
+                    buildList {
+                        if (rootExplicitlySelected) add(AndroidPermissionLevel.ROOT)
+                        add(AndroidPermissionLevel.ADMIN)
+                        add(AndroidPermissionLevel.DEBUGGER)
+                        add(AndroidPermissionLevel.ACCESSIBILITY)
+                        add(AndroidPermissionLevel.STANDARD)
+                    }
 
             for (level in levels) {
                 val executor = getExecutor(context, level)

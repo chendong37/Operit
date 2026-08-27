@@ -12,7 +12,7 @@
 
 ### 应用内 AI 协作开发
 
-这是普通 Sandbox Package 作者的默认流程。先更新并运行 `SandboxPackage_DEV` 安装脚本，再在 `/sdcard/Download/Operit/dev_package/{packageId}/` 中开发。宿主类型放在同级的 `/sdcard/Download/Operit/dev_package/types/`，具体步骤以安装后的 `SKILL.md` 为准。
+这是普通 Sandbox Package 作者的默认流程。先更新并运行 `SandboxPackage_DEV` 安装脚本，再在 `/sdcard/Download/ZhixingAI/dev_package/{packageId}/` 中开发。宿主类型放在同级的 `/sdcard/Download/ZhixingAI/dev_package/types/`，具体步骤以安装后的 `SKILL.md` 为准。
 
 ### 独立插件作者
 

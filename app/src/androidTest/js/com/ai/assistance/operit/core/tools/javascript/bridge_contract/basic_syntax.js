@@ -100,7 +100,8 @@ exports.run = async function run() {
     }),
     test('application context is exposed as java proxy', () => {
       const context = Java.getApplicationContext();
-      assertEq(String(context.getPackageName()), 'com.ai.assistance.operit');
+      const applicationId = String(Java.type('com.ai.assistance.operit.BuildConfig').APPLICATION_ID);
+      assertEq(String(context.getPackageName()), applicationId);
     }),
     test('Kotlin alias mirrors Java bridge entry points', () => {
       const file = Kotlin.type('java.io.File')('/sdcard/kotlin-alias.txt');

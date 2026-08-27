@@ -54,7 +54,7 @@ class YourApplication : Application() {
 本库已经在自身模块内置了 `shower-server.jar`：
 
 - 宿主 App **不需要** 再手动打包或拷贝任何 JAR 文件；
-- 运行时库会自动从自身 `assets` 中读取，并复制到 `/sdcard/Download/Operit/shower-server.jar`，再拷贝到 `/data/local/tmp/shower-server.jar`。
+- 运行时库会自动从自身 `assets` 中读取，先复制到 `/sdcard/Download/<hostPackage>/shower-server.jar`，再按宿主 applicationId 隔离到 `/data/local/tmp/shower-server-<package-token>.jar`。日志和 PID 文件使用同一 token，多个宿主变体不会共用进程文件。
 
 ---
 
@@ -64,14 +64,14 @@ Shower server 启动后，会通过广播把 `IShowerService` 的 `IBinder` 发�
 
 广播协议（与主项目保持一致）：
 
- - **Action**：`com.ai.assistance.operit.action.SHOWER_BINDER_READY`
+ - **Action**：`<hostPackage>.action.SHOWER_BINDER_READY`
  - **Extra key**：`binder_container`
  - **Extra 类型**：`com.ai.assistance.shower.ShowerBinderContainer`（`Parcelable`，内部包含 `IBinder`）
 
 ```kotlin
 class ShowerBinderReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action != ACTION_SHOWER_BINDER_READY) return
+        if (intent.action != actionShowerBinderReady(context)) return
 
         val container = intent.getParcelableExtra<ShowerBinderContainer>(EXTRA_BINDER_CONTAINER)
         val binder = container?.binder ?: return
@@ -80,8 +80,8 @@ class ShowerBinderReceiver : BroadcastReceiver() {
     }
 
     companion object {
-        const val ACTION_SHOWER_BINDER_READY =
-            "com.ai.assistance.operit.action.SHOWER_BINDER_READY"
+        fun actionShowerBinderReady(context: Context): String =
+            context.packageName + ".action.SHOWER_BINDER_READY"
         const val EXTRA_BINDER_CONTAINER = "binder_container"
     }
 }
@@ -92,16 +92,17 @@ class ShowerBinderReceiver : BroadcastReceiver() {
 ```xml
 <receiver
     android:name=".ShowerBinderReceiver"
-    android:exported="true">
+    android:exported="true"
+    android:permission="android.permission.DUMP">
     <intent-filter>
-        <action android:name="com.ai.assistance.operit.action.SHOWER_BINDER_READY" />
+        <action android:name="${applicationId}.action.SHOWER_BINDER_READY" />
     </intent-filter>
 </receiver>
 ```
 
 说明：
 
- - `ShowerServerManager` 启动命令会附带宿主包名参数：`CLASSPATH=/data/local/tmp/shower-server.jar app_process / com.ai.assistance.shower.Main <hostPackage> &`。
+ - `ShowerServerManager` 启动命令会附带宿主包名和隔离日志参数：`CLASSPATH=/data/local/tmp/shower-server-<package-token>.jar app_process / com.ai.assistance.shower.Main <hostPackage> <logPath> &`。
  - shower-server 读取该参数后，会通过 `IActivityManager.broadcastIntent(...)` 发送 `SHOWER_BINDER_READY`，并用 `Intent.setPackage(<hostPackage>)` 只投递给目标宿主包。
  - 因此宿主 App 侧的关键是：**Manifest 里声明 intent-filter 的 action 必须匹配**，并在 `onReceive()` 里把 `ShowerBinderContainer` 交给 `ShowerBinderRegistry.setService()`。
 

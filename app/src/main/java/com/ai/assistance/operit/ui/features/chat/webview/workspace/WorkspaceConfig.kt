@@ -1,6 +1,7 @@
 package com.ai.assistance.operit.ui.features.chat.webview.workspace
 
 import android.content.Context
+import com.ai.assistance.operit.BuildConfig
 import com.ai.assistance.operit.R
 import com.ai.assistance.operit.util.AppLogger
 import kotlinx.serialization.Serializable
@@ -27,7 +28,7 @@ data class WorkspaceConfig(
 @Serializable
 data class ServerConfig(
     val enabled: Boolean = false,
-    val port: Int = 8093,
+    val port: Int = BuildConfig.WORKSPACE_PORT,
     val autoStart: Boolean = false
 )
 
@@ -118,12 +119,12 @@ object WorkspaceConfigReader {
             projectType = "web",
             server = ServerConfig(
                 enabled = true,
-                port = 8093,
+                port = BuildConfig.WORKSPACE_PORT,
                 autoStart = true
             ),
             preview = PreviewConfig(
                 type = "browser",
-                url = "http://localhost:8093"
+                url = "http://localhost:${BuildConfig.WORKSPACE_PORT}"
             ),
             commands = emptyList()
         )

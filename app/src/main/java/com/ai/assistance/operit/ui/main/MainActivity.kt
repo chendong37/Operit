@@ -33,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import com.ai.assistance.operit.BuildConfig
 import com.ai.assistance.operit.R
 import com.ai.assistance.operit.api.chat.AIForegroundService
 import com.ai.assistance.operit.core.application.OperitApplication
@@ -67,7 +68,8 @@ import org.json.JSONObject
 
 class MainActivity : ComponentActivity() {
     companion object {
-        const val ACTION_OPEN_SETTINGS_SHORTCUT = "com.ai.assistance.operit.action.OPEN_SETTINGS_SHORTCUT"
+        val ACTION_OPEN_SETTINGS_SHORTCUT =
+            com.ai.assistance.operit.core.application.AppIntentActions.openSettingsShortcut
     }
 
     private val TAG = "MainActivity"
@@ -209,8 +211,10 @@ class MainActivity : ComponentActivity() {
         // 设置初始界面
         setAppContent()
 
-        // 初始化并设置更新管理器
-        setupUpdateManager()
+        // 团队内部版本由显式构建策略决定是否连接公开更新源。
+        if (BuildConfig.UPDATE_CHECK_ENABLED) {
+            setupUpdateManager()
+        }
 
         // 只在首次创建时执行检查（非配置变更）
         if (savedInstanceState == null) {

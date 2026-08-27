@@ -2,11 +2,12 @@ package com.ai.assistance.operit.util
 
 import android.content.Context
 import android.os.Environment
+import com.ai.assistance.operit.BuildConfig
 import java.io.File
 
 object OperitPaths {
 
-    private const val OPERIT_DIR_NAME = "Operit"
+    private val APP_ROOT_DIR_NAME = BuildConfig.PUBLIC_STORAGE_ROOT
     private const val CLEAN_ON_EXIT_DIR_NAME = "cleanOnExit"
     private const val PLUGINS_DIR_NAME = "plugins"
     private const val MCP_PLUGINS_DIR_NAME = "mcp_plugins"
@@ -16,6 +17,13 @@ object OperitPaths {
     private const val TEST_DIR_NAME = "test"
     private const val WEBSESSION_DIR_NAME = "websession"
     private const val USERSCRIPTS_DIR_NAME = "userscripts"
+    private const val SKILLS_DIR_NAME = "skills"
+    private const val OUTPUT_IMAGES_DIR_NAME = "output images"
+    private const val ERROR_DIR_NAME = "error"
+    private const val MODELS_DIR_NAME = "models"
+    private const val MNN_MODELS_DIR_NAME = "mnn"
+    private const val LLAMA_MODELS_DIR_NAME = "llama"
+    private const val WORKFLOW_DIR_NAME = "workflow"
 
     const val SHERPA_NCNN_MODELS_DIR_NAME = ".sherpa_ncnn_models"
     const val VECTOR_INDEX_DIR_NAME = ".vector_index"
@@ -29,7 +37,7 @@ object OperitPaths {
     }
 
     fun operitRootDir(): File {
-        return ensureDir(File(downloadsDir(), OPERIT_DIR_NAME))
+        return ensureDir(File(downloadsDir(), APP_ROOT_DIR_NAME))
     }
 
     fun cleanOnExitDir(): File {
@@ -57,11 +65,33 @@ object OperitPaths {
     }
 
     fun cleanOnExitInternalDir(context: Context): File {
-        return ensureDir(File(ensureDir(File(context.cacheDir, OPERIT_DIR_NAME)), CLEAN_ON_EXIT_DIR_NAME))
+        return ensureDir(File(ensureDir(File(context.cacheDir, APP_ROOT_DIR_NAME)), CLEAN_ON_EXIT_DIR_NAME))
     }
 
     fun mcpPluginsDir(): File {
         return ensureDir(File(operitRootDir(), MCP_PLUGINS_DIR_NAME))
+    }
+
+    /**
+     * Returns the shared MCP directory when scoped-storage access allows it, otherwise an
+     * app-private external (or internal) directory. MCP must remain usable on a standard,
+     * non-Root Android installation without MANAGE_EXTERNAL_STORAGE.
+     */
+    fun writableMcpPluginsDir(context: Context): File {
+        val publicDir = mcpPluginsDir()
+        if (publicDir.isDirectory && publicDir.canWrite()) {
+            return publicDir
+        }
+
+        val appExternalDir = context.getExternalFilesDir(MCP_PLUGINS_DIR_NAME)
+        if (appExternalDir != null) {
+            ensureDir(appExternalDir)
+            if (appExternalDir.isDirectory && appExternalDir.canWrite()) {
+                return appExternalDir
+            }
+        }
+
+        return ensureDir(File(context.filesDir, MCP_PLUGINS_DIR_NAME))
     }
 
     fun bridgeDir(): File {
@@ -86,6 +116,34 @@ object OperitPaths {
 
     fun webSessionUserscriptsDir(): File {
         return ensureDir(File(webSessionDir(), USERSCRIPTS_DIR_NAME))
+    }
+
+    fun skillsDir(): File {
+        return ensureDir(File(operitRootDir(), SKILLS_DIR_NAME))
+    }
+
+    fun outputImagesDir(): File {
+        return ensureDir(File(operitRootDir(), OUTPUT_IMAGES_DIR_NAME))
+    }
+
+    fun errorDir(): File {
+        return ensureDir(File(operitRootDir(), ERROR_DIR_NAME))
+    }
+
+    fun modelsDir(): File {
+        return ensureDir(File(operitRootDir(), MODELS_DIR_NAME))
+    }
+
+    fun mnnModelsDir(): File {
+        return ensureDir(File(modelsDir(), MNN_MODELS_DIR_NAME))
+    }
+
+    fun llamaModelsDir(): File {
+        return ensureDir(File(modelsDir(), LLAMA_MODELS_DIR_NAME))
+    }
+
+    fun workflowDir(): File {
+        return ensureDir(File(operitRootDir(), WORKFLOW_DIR_NAME))
     }
 
     fun sherpaNcnnModelsDir(context: Context): File {
@@ -119,7 +177,7 @@ object OperitPaths {
     }
 
     fun operitRootPathSdcard(): String {
-        return "/sdcard/Download/$OPERIT_DIR_NAME"
+        return "/sdcard/Download/$APP_ROOT_DIR_NAME"
     }
 
     fun cleanOnExitPathSdcard(): String {
@@ -148,6 +206,10 @@ object OperitPaths {
 
     fun webSessionUserscriptsPathSdcard(): String {
         return "${operitRootPathSdcard()}/$WEBSESSION_DIR_NAME/$USERSCRIPTS_DIR_NAME"
+    }
+
+    fun skillsPathSdcard(): String {
+        return "${operitRootPathSdcard()}/$SKILLS_DIR_NAME"
     }
 
     private fun ensureDir(dir: File): File {

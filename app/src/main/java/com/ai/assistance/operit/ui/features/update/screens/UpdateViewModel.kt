@@ -3,6 +3,7 @@ package com.ai.assistance.operit.ui.features.update.screens
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ai.assistance.operit.BuildConfig
 import com.ai.assistance.operit.data.api.GitHubApiService
 import com.ai.assistance.operit.data.api.GitHubRelease
 import com.ai.assistance.operit.R
@@ -30,13 +31,21 @@ class UpdateViewModel(private val context: Context) : ViewModel() {
     }
     
     init {
-        loadUpdates()
+        if (BuildConfig.UPDATE_CHECK_ENABLED) {
+            loadUpdates()
+        } else {
+            _uiState.value = UpdateUiState.Success(emptyList())
+        }
     }
     
     /**
      * 加载更新历史
      */
     fun loadUpdates() {
+        if (!BuildConfig.UPDATE_CHECK_ENABLED) {
+            _uiState.value = UpdateUiState.Success(emptyList())
+            return
+        }
         viewModelScope.launch {
             _uiState.value = UpdateUiState.Loading
             
@@ -101,4 +110,3 @@ sealed class UpdateUiState {
     data class Success(val updates: List<UpdateInfo>) : UpdateUiState()
     data class Error(val message: String) : UpdateUiState()
 }
-

@@ -23,7 +23,7 @@ object ShowerServerManager {
     /**
      * Stop the Shower server process if running.
      */
-    suspend fun stopServer(): Boolean {
-        return CoreShowerServerManager.stopServer()
+    suspend fun stopServer(context: Context): Boolean {
+        return CoreShowerServerManager.stopServer(context)
     }
 }

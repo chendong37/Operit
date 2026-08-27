@@ -312,7 +312,7 @@ class AttachmentDelegate(private val context: Context, private val toolHandler: 
                 try {
                     val fileExtension = fileName.substringAfterLast('.', "jpg")
 
-                    // 使用外部存储Download/Operit/cleanOnExit目录，而不是缓存目录
+                    // 使用 OperitPaths 分配给当前应用的外部临时目录，而不是缓存目录
                     val externalDir = OperitPaths.cleanOnExitDir()
 
                     // 确保目录存在

@@ -231,7 +231,9 @@ fun WorkspaceManager(
     var lastLoadedWorkspacePreviewUrl by remember(workspacePath, workspaceEnv) {
         mutableStateOf<String?>(null)
     }
-    val workspacePreviewUrl = workspaceConfig.preview.url.ifEmpty { "http://localhost:8093" }
+    val workspacePreviewUrl = workspaceConfig.preview.url.ifEmpty {
+        "http://localhost:${LocalWebServer.WORKSPACE_PORT}"
+    }
     val workspacePreviewOptions = remember(workspacePreviewUrl) { previewWebViewOptions(workspacePreviewUrl) }
 
     var canWebViewGoBack by remember { mutableStateOf(false) }

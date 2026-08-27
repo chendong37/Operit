@@ -87,12 +87,7 @@ class DemoStateManager(private val context: Context, private val coroutineScope:
             )
         }
 
-        // 如果设备已Root但未获取权限，则显示Root向导
-        if (isDeviceRooted && !hasRootAccess) {
-            _uiState.update { currentState ->
-                currentState.copy(showRootWizard = mutableStateOf(true))
-            }
-        }
+        // Root 向导只由用户展开，不因检测到设备已 Root 而自动弹出。
     }
 
     /** Update UI state */

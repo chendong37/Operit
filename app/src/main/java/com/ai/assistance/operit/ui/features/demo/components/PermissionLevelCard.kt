@@ -90,12 +90,12 @@ fun PermissionLevelCard(
     // 获取当前权限级别
     val preferredPermissionLevel =
             androidPermissionPreferences.preferredPermissionLevelFlow.collectAsState(
-                    initial = AndroidPermissionLevel.STANDARD
+                    initial = AndroidPermissionLevel.ACCESSIBILITY
             )
 
     // 当前显示的权限级别（可能与实际使用的不同）
     var displayedPermissionLevel by remember {
-        mutableStateOf(preferredPermissionLevel.value ?: AndroidPermissionLevel.STANDARD)
+        mutableStateOf(preferredPermissionLevel.value ?: AndroidPermissionLevel.ACCESSIBILITY)
     }
 
     // 当显示的权限级别变化时，通知父组件
@@ -112,7 +112,8 @@ fun PermissionLevelCard(
 
     // 当组件首次加载时，同步显示级别和实际级别
     LaunchedEffect(Unit) {
-        displayedPermissionLevel = preferredPermissionLevel.value ?: AndroidPermissionLevel.STANDARD
+        displayedPermissionLevel =
+                preferredPermissionLevel.value ?: AndroidPermissionLevel.ACCESSIBILITY
         onPermissionLevelChange(displayedPermissionLevel)
     }
 

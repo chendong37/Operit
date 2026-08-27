@@ -1,6 +1,7 @@
 package com.ai.assistance.operit.data.mcp.plugins
 
 import android.util.Log
+import com.ai.assistance.operit.BuildConfig
 import com.ai.assistance.operit.core.tools.mcp.McpRuntimeCallResult
 import com.ai.assistance.operit.core.tools.mcp.McpRuntimeDescriptor
 import com.ai.assistance.operit.core.tools.mcp.McpRuntimeSession
@@ -70,7 +71,7 @@ class RemoteMcpRuntimeSession(
 
             val mcpClient = Client(
                 clientInfo = Implementation(
-                    name = "Operit",
+                    name = BuildConfig.PRODUCT_NAME,
                     version = "mcp-runtime"
                 )
             )

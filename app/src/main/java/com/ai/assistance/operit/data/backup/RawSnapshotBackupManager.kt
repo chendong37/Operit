@@ -29,10 +29,10 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-private const val SNAPSHOT_PACKAGE_NAME_PREFIX = "com.ai.assistance.operit"
-
-internal fun isSupportedSnapshotPackageName(packageName: String): Boolean =
-    packageName.startsWith(SNAPSHOT_PACKAGE_NAME_PREFIX)
+internal fun isSupportedSnapshotPackageName(
+    packageName: String,
+    expectedPackageName: String,
+): Boolean = packageName == expectedPackageName
 
 object RawSnapshotBackupManager {
 
@@ -290,7 +290,11 @@ object RawSnapshotBackupManager {
                 AppLogger.i(TAG, "restore closed databases (room + objectbox)")
 
                 withContext(Dispatchers.Main) { onProgress?.invoke(RestoreProgress.EXTRACTING) }
-                val manifest = extractZipToWorkDir(cacheZip, workDir)
+                val manifest = extractZipToWorkDir(
+                    zipFile = cacheZip,
+                    workDir = workDir,
+                    expectedPackageName = context.packageName,
+                )
 
                 val payloadDir = File(workDir, "payload")
                 val externalFilesPayloadDir = File(payloadDir, "external_files")
@@ -345,7 +349,11 @@ object RawSnapshotBackupManager {
         }
     }
 
-    private fun extractZipToWorkDir(zipFile: File, workDir: File): Manifest {
+    private fun extractZipToWorkDir(
+        zipFile: File,
+        workDir: File,
+        expectedPackageName: String,
+    ): Manifest {
         val payloadRoot = File(workDir, "payload")
         payloadRoot.mkdirs()
 
@@ -409,7 +417,7 @@ object RawSnapshotBackupManager {
             throw IllegalArgumentException("Unsupported backup version: ${manifest.formatVersion}")
         }
 
-        if (!isSupportedSnapshotPackageName(manifest.packageName)) {
+        if (!isSupportedSnapshotPackageName(manifest.packageName, expectedPackageName)) {
             throw IllegalArgumentException("Backup package mismatch: ${manifest.packageName}")
         }
 

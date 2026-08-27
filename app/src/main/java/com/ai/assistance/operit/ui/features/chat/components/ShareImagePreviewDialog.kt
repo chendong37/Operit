@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import com.ai.assistance.operit.BuildConfig
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTransformGestures
@@ -211,7 +212,10 @@ suspend fun saveShareImageToGallery(context: android.content.Context, uri: Uri):
                 val contentValues = ContentValues().apply {
                     put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
                     put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
-                    put(MediaStore.MediaColumns.RELATIVE_PATH, "${Environment.DIRECTORY_PICTURES}/Operit")
+                    put(
+                        MediaStore.MediaColumns.RELATIVE_PATH,
+                        "${Environment.DIRECTORY_PICTURES}/${BuildConfig.PUBLIC_STORAGE_ROOT}",
+                    )
                 }
                 val targetUri = context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
                     ?: return@withContext false
@@ -223,7 +227,7 @@ suspend fun saveShareImageToGallery(context: android.content.Context, uri: Uri):
                 true
             } else {
                 val picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                val outputDir = File(picturesDir, "Operit").apply { mkdirs() }
+                val outputDir = File(picturesDir, BuildConfig.PUBLIC_STORAGE_ROOT).apply { mkdirs() }
                 val outputFile = File(outputDir, fileName)
                 context.contentResolver.openInputStream(uri)?.use { input ->
                     outputFile.outputStream().use { output -> input.copyTo(output) }

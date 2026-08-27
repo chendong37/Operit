@@ -38,10 +38,8 @@ class ShizukuDemoViewModel(application: Application) : AndroidViewModel(applicat
         get() = stateManager.isNodejsPythonEnvironmentReady
 
     /** Initialize the ViewModel with context data */
-    fun initialize(context: Context) {
-        // 初始化Root授权器
-        RootAuthorizer.initialize(context)
-        // 只需要调用stateManager的initialize方法
+    fun initialize() {
+        // Root 授权器只能由用户在 Root 向导中显式触发。进入权限页时不探测或申请 Root。
         stateManager.initialize()
     }
 
@@ -51,21 +49,9 @@ class ShizukuDemoViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     /** Initialize the ViewModel with context data (Async version) */
-    fun initializeAsync(context: Context) {
+    fun initializeAsync() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                // 初始化Root授权器 - 在IO线程进行初始化
-                RootAuthorizer.initialize(context)
-
-                // 直接从RootAuthorizer获取当前状态
-                val isDeviceRooted = RootAuthorizer.isRooted.value
-                val hasRootAccess = RootAuthorizer.hasRootAccess.value
-
-                // 更新状态
-                withContext(Dispatchers.Main) {
-                    stateManager.updateRootStatus(isDeviceRooted, hasRootAccess)
-                }
-
                 // 调用stateManager的异步初始化方法
                 stateManager.initializeAsync()
             } catch (e: Exception) {
@@ -78,9 +64,8 @@ class ShizukuDemoViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     /** Refresh app status */
-    fun refreshStatus(context: Context) {
-        // 检查Root状态
-        checkRootStatus(context)
+    fun refreshStatus() {
+        // 通用刷新不触碰 su；Root 状态只在用户显式操作 Root 向导后刷新。
         stateManager.refreshStatus()
     }
 
@@ -100,6 +85,9 @@ class ShizukuDemoViewModel(application: Application) : AndroidViewModel(applicat
     /** Request root permission */
     fun requestRootPermission(context: Context) {
         viewModelScope.launch {
+            // 这是唯一会初始化 libsu / 触发 Root 管理器弹窗的 UI 路径，且只由用户按钮触发。
+            RootAuthorizer.initialize(context)
+
             // 如果已有Root权限，则直接执行测试命令
             if (RootAuthorizer.hasRootAccess.value) {
                 executeRootCommand("id", context)
