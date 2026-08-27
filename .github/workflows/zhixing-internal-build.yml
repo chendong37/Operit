@@ -1,0 +1,280 @@
+name: Zhixing AI Internal APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/team-custom-assistant]
+
+concurrency:
+  group: zhixing-ai-internal-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  JAVA_VERSION: '21'
+  NODE_VERSION: '22'
+  ANDROID_BUILD_TOOLS_VERSION: '35.0.0'
+  ANDROID_NDK_VERSION: '25.1.8937393'
+  ANDROID_CMAKE_VERSION: '3.22.1'
+  ANDROID_API_LEVEL: '26'
+  RUST_VERSION: '1.88.0'
+  MANUAL_DEPS_DIR: manual-deps
+
+jobs:
+  build:
+    name: Build dev-signed internal APK
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+
+    steps:
+      - name: Initialize build diagnostics
+        env:
+          SOURCE_REPOSITORY: ${{ github.repository }}
+          SOURCE_REF: ${{ github.ref }}
+          SOURCE_SHA: ${{ github.sha }}
+          WORKFLOW_RUN: ${{ github.run_id }}
+          WORKFLOW_ATTEMPT: ${{ github.run_attempt }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          log_dir="$RUNNER_TEMP/zhixing-internal-build-logs"
+          mkdir -p "$log_dir"
+          {
+            echo "repository=$SOURCE_REPOSITORY"
+            echo "ref=$SOURCE_REF"
+            echo "sha=$SOURCE_SHA"
+            echo "run_id=$WORKFLOW_RUN"
+            echo "run_attempt=$WORKFLOW_ATTEMPT"
+            echo "runner=$RUNNER_OS-$RUNNER_ARCH"
+          } | tee "$log_dir/build-metadata.log"
+
+      - name: Checkout source
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+          submodules: false
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+
+      - name: Initialize terminal submodule
+        shell: bash
+        run: |
+          set -euo pipefail
+          log="$RUNNER_TEMP/zhixing-internal-build-logs/dependency-setup.log"
+          {
+            git submodule sync -- terminal
+            git submodule update --init --recursive --depth 1 terminal
+            git submodule status -- terminal
+          } 2>&1 | tee -a "$log"
+
+      - name: Set up JDK
+        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: gradle
+
+      - name: Set up Node.js
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@40fd30fb8d7440372e1316f5d1809ec01dcd3699 # v4
+
+      - name: Install Android SDK, NDK and CMake
+        shell: bash
+        run: |
+          set -euo pipefail
+          log="$RUNNER_TEMP/zhixing-internal-build-logs/dependency-setup.log"
+          sdkmanager --install \
+            "platform-tools" \
+            "platforms;android-34" \
+            "platforms;android-36" \
+            "build-tools;34.0.0" \
+            "build-tools;$ANDROID_BUILD_TOOLS_VERSION" \
+            "ndk;$ANDROID_NDK_VERSION" \
+            "cmake;$ANDROID_CMAKE_VERSION" \
+            2>&1 | tee -a "$log"
+
+      - name: Restore Android CMake source cache
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: |
+            **/.cxx/operit_deps/*-src
+          key: android-cmake-sources-${{ runner.os }}-${{ runner.arch }}-arm64-v8a-ndk-${{ env.ANDROID_NDK_VERSION }}-cmake-${{ env.ANDROID_CMAKE_VERSION }}-${{ hashFiles('cmake/**', '**/CMakeLists.txt', '**/*.cmake', '**/build.gradle.kts', 'gradle.properties') }}
+
+      - name: Restore Android dependency cache
+        id: cache-manual-deps
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: ${{ env.MANUAL_DEPS_DIR }}
+          key: android-full-deps-${{ runner.os }}-${{ hashFiles('ci/script/download_android_dependencies.sh', 'ci/script/prepare_android_dependencies.py') }}
+
+      - name: Restore generated STT asset cache
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: app/build/generated/stt-model-assets
+          key: stt-model-assets-${{ runner.os }}-${{ hashFiles('app/config/stt-model-assets.properties') }}
+
+      - name: Download Android dependencies
+        if: steps.cache-manual-deps.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          log="$RUNNER_TEMP/zhixing-internal-build-logs/dependency-setup.log"
+          bash ci/script/download_android_dependencies.sh full "$MANUAL_DEPS_DIR" \
+            2>&1 | tee -a "$log"
+
+      - name: Verify Android dependency archives
+        shell: bash
+        run: |
+          set -euo pipefail
+          log="$RUNNER_TEMP/zhixing-internal-build-logs/dependency-setup.log"
+          {
+            cd "$MANUAL_DEPS_DIR"
+            sha256sum --check <<'SHA256SUMS'
+          1625489c81bb6e3ec6d29d41c39a53cb985e997be474425be01f909a6df887f8  libs.zip
+          2953448c93b0e4e51a6434b96b0145af271efdf07bf99a54b24925727c8545ae  subpack.zip
+          2e8a4efd78b4b9daf3274ee17ba38eb5f42fb57bf43381b63c55aaa1d3148b53  jniLibs.zip
+          SHA256SUMS
+          } 2>&1 | tee -a "$log"
+
+      - name: Prepare Android dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          log="$RUNNER_TEMP/zhixing-internal-build-logs/dependency-setup.log"
+          python3 ci/script/prepare_android_dependencies.py \
+            --profile full \
+            --archives "$MANUAL_DEPS_DIR" \
+            --repository "$GITHUB_WORKSPACE" \
+            2>&1 | tee -a "$log"
+
+      - name: Restore native ripgrep cache
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            tools/native_ripgrep/target
+          key: native-ripgrep-arm64-${{ runner.os }}-${{ runner.arch }}-ndk-${{ env.ANDROID_NDK_VERSION }}-api-${{ env.ANDROID_API_LEVEL }}-rust-${{ env.RUST_VERSION }}-${{ hashFiles('tools/native_ripgrep/Cargo.toml', 'tools/native_ripgrep/Cargo.lock', 'tools/native_ripgrep/**/*.rs', 'tools/native_ripgrep/build_native_ripgrep.ps1') }}
+
+      - name: Build native ripgrep
+        shell: bash
+        run: |
+          set -euo pipefail
+          log="$RUNNER_TEMP/zhixing-internal-build-logs/dependency-setup.log"
+          {
+            export ANDROID_NDK_HOME="$ANDROID_HOME/ndk/$ANDROID_NDK_VERSION"
+            export CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER="$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android${ANDROID_API_LEVEL}-clang"
+            rustup toolchain install "$RUST_VERSION" --profile minimal
+            rustup target add --toolchain "$RUST_VERSION" aarch64-linux-android
+            cargo "+$RUST_VERSION" build \
+              --manifest-path tools/native_ripgrep/Cargo.toml \
+              --release \
+              --target aarch64-linux-android \
+              --locked
+            install -Dm755 \
+              tools/native_ripgrep/target/aarch64-linux-android/release/liboperit_ripgrep.so \
+              app/src/main/jniLibs/arm64-v8a/liboperit_ripgrep.so
+            test -s app/src/main/jniLibs/arm64-v8a/liboperit_ripgrep.so
+          } 2>&1 | tee -a "$log"
+
+      - name: Install JavaScript dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          log="$RUNNER_TEMP/zhixing-internal-build-logs/frontend-assets.log"
+          {
+            npm install -g pnpm@10.34.5
+            npm ci --no-audit --no-fund
+            npm --prefix web-chat ci --no-audit --no-fund
+          } 2>&1 | tee -a "$log"
+
+      - name: Build WebChat assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          log="$RUNNER_TEMP/zhixing-internal-build-logs/frontend-assets.log"
+          npm run build:webchat 2>&1 | tee -a "$log"
+
+      - name: Build bundled ToolPkg packages
+        shell: bash
+        run: |
+          set -euo pipefail
+          log="$RUNNER_TEMP/zhixing-internal-build-logs/frontend-assets.log"
+          {
+            npm run build:examples:github
+            python3 tools/example_packages/sync_example_packages.py --no-hot-reload
+          } 2>&1 | tee -a "$log"
+
+      - name: Configure Android SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+
+      - name: Build Zhixing AI internal APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          chmod +x ./gradlew
+          ./gradlew :app:assembleInternal --stacktrace --no-daemon \
+            2>&1 | tee "$RUNNER_TEMP/zhixing-internal-build-logs/gradle-assemble-internal.log"
+
+      - name: Verify APK identity and signature
+        shell: bash
+        run: |
+          set -euo pipefail
+          apk="app/build/outputs/apk/internal/zhixing-ai-internal-dev-signed.apk"
+          log="$RUNNER_TEMP/zhixing-internal-build-logs/apk-verification.log"
+          test -s "$apk"
+          {
+            "$ANDROID_HOME/build-tools/$ANDROID_BUILD_TOOLS_VERSION/aapt" dump badging "$apk"
+            "$ANDROID_HOME/build-tools/$ANDROID_BUILD_TOOLS_VERSION/apksigner" \
+              verify --verbose --print-certs "$apk"
+            sha256sum "$apk"
+          } 2>&1 | tee "$log"
+          grep -Fq "package: name='com.zhixing.ai'" "$log"
+
+          read -r apk_sha _ < <(sha256sum "$apk")
+          {
+            echo "## Zhixing AI internal APK"
+            echo
+            echo "- Source: \`${GITHUB_SHA}\`"
+            echo "- Package: \`com.zhixing.ai\`"
+            echo "- APK: \`zhixing-ai-internal-dev-signed.apk\`"
+            echo "- SHA-256: \`${apk_sha}\`"
+            echo "- Signing: runner-generated Android debug key; use only for device validation."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload internal APK
+        if: success()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: zhixing-ai-internal-dev-${{ github.run_number }}-${{ github.run_attempt }}
+          path: app/build/outputs/apk/internal/zhixing-ai-internal-dev-signed.apk
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
+
+      - name: Upload build logs and reports
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: zhixing-ai-internal-logs-${{ github.run_number }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/zhixing-internal-build-logs/**
+            app/build/reports/**
+            app/build/outputs/logs/**
+            build/reports/**
+          if-no-files-found: warn
+          retention-days: 14
