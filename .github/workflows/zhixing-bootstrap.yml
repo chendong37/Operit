@@ -61,14 +61,22 @@ jobs:
             fi
           done < "$overlay_root/DELETE_FILES.txt"
 
-          rm -f -- "$GITHUB_WORKSPACE/.github/workflows/zhixing-bootstrap.yml"
+          rm -f -- "$GITHUB_WORKSPACE/.github/workflows/zhixing-internal-build.yml"
           rm -f -- "$archive_gz"
           rmdir -- "$GITHUB_WORKSPACE/.zhixing-bootstrap"
 
           cd "$GITHUB_WORKSPACE"
           git add -A
           materialized_tree="$(git write-tree)"
-          test "$materialized_tree" = '8651e8fd9361b336b628c0958f1bc6d01e24ce87'
+          validation_tmp="$(mktemp -d)"
+          validation_index="$validation_tmp/index"
+          cp .git/index "$validation_index"
+          GIT_INDEX_FILE="$validation_index" \
+            git update-index --force-remove .github/workflows/zhixing-bootstrap.yml
+          source_tree="$(GIT_INDEX_FILE="$validation_index" git write-tree)"
+          test "$source_tree" = 'ece4697aefd45e4b13cd5d7d6a519df61d4cb8bd'
+          unlink "$validation_index"
+          rmdir "$validation_tmp"
 
           git config user.name 'Zhixing AI Build Bot'
           git config user.email 'actions@users.noreply.github.com'
@@ -81,5 +89,6 @@ jobs:
             echo
             echo "- Commit: \`$materialized_sha\`"
             echo "- Tree: \`$materialized_tree\`"
-            echo '- Bootstrap files removed: yes'
+            echo "- Source tree without bootstrap: \`$source_tree\`"
+            echo '- Source materialized; workflow finalization is delegated to the authorized GitHub connection.'
           } >> "$GITHUB_STEP_SUMMARY"
