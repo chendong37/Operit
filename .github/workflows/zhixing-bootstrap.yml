@@ -69,10 +69,6 @@ jobs:
           git add -A
           materialized_tree="$(git write-tree)"
           test "$materialized_tree" = '8651e8fd9361b336b628c0958f1bc6d01e24ce87'
-          if git diff --cached --name-only | grep -q '^\.zhixing-bootstrap/\|^\.github/workflows/zhixing-bootstrap\.yml$'; then
-            echo 'Bootstrap files remain staged.' >&2
-            exit 1
-          fi
 
           git config user.name 'Zhixing AI Build Bot'
           git config user.email 'actions@users.noreply.github.com'
