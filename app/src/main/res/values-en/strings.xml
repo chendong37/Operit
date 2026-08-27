@@ -264,7 +264,7 @@
     <string name="workflow_trigger_type_schedule">Schedule</string>
     <string name="workflow_trigger_type_tasker">Tasker</string>
     <string name="workflow_tasker_action_label">Zhixing AI Workflow</string>
-    <string name="workflow_tasker_command_desc">Enter the workflow command to trigger. It must exactly match the command in the workflow's Tasker trigger.</string>
+    <string name="workflow_tasker_command_desc">Enter the workflow command to trigger. It must exactly match the command configured in the Tasker trigger.</string>
     <string name="workflow_tasker_command_hint">Example: start_meeting</string>
     <string name="workflow_tasker_command_required">Workflow command is required</string>
     <string name="workflow_tasker_save">Save to Tasker</string>
